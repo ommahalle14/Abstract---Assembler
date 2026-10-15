@@ -763,3 +763,112 @@ bool checkOperandKinds(const Instruction& instr, vector<AsmError>& errors) {
     }
     return ok;
 }
+
+// Parses tokens[start..end] as one instruction. Returns false on error
+// (the error is already recorded).
+bool parseInstruction(const vector<Token>& tokens, size_t start,
+                      Instruction& instr, vector<AsmError>& errors) {
+    const Token& first = tokens[start];
+    instr.line         = first.line;
+    instr.column       = first.column;
+    instr.address      = 0;
+    instr.length       = 0;
+    instr.displacement = 0;
+
+    // 1. first token must be a valid mnemonic
+    if (first.type != TokenType::MNEMONIC) {
+        if (first.type == TokenType::IDENTIFIER)
+            addError(errors, "Syntax Error", "invalid mnemonic '" + first.text + "'",
+                     first.line, first.column);
+        else
+            addError(errors, "Syntax Error", "expected a mnemonic, found '" + first.text + "'",
+                     first.line, first.column);
+        return false;
+    }
+    instr.mnemonic = first.text;
+
+    // 2. read operands:  operand {, operand}
+    size_t idx = start + 1;
+    while (idx < tokens.size()) {
+        const Token& t = tokens[idx];
+        Operand op;
+
+        int explicitSize = 0;
+        string prefixText = "";
+        int startCol = t.column;
+
+        // Check for size directives: BYTE, WORD, DWORD, QWORD, PTR
+        if (t.type == TokenType::IDENTIFIER) {
+            string u = toUpper(t.text);
+            if (u == "BYTE" || u == "WORD" || u == "DWORD" || u == "QWORD") {
+                if (u == "BYTE") explicitSize = 8;
+                else if (u == "WORD") explicitSize = 16;
+                else if (u == "DWORD") explicitSize = 32;
+                else if (u == "QWORD") explicitSize = 64;
+                prefixText = u;
+                idx++;
+                if (idx < tokens.size() && tokens[idx].type == TokenType::IDENTIFIER &&
+                    toUpper(tokens[idx].text) == "PTR") {
+                    prefixText += " PTR";
+                    idx++;
+                }
+            } else if (u == "PTR") {
+                prefixText = "PTR";
+                idx++;
+            }
+        }
+
+        if (idx >= tokens.size()) {
+            addError(errors, "Syntax Error", "missing operand after size directive",
+                     t.line, t.column + (int)t.text.size());
+            return false;
+        }
+
+        const Token& curr = tokens[idx];
+
+        if (curr.type == TokenType::MEMORY) {
+            string memRaw = curr.text;
+            string inside = (memRaw.size() >= 2) ? memRaw.substr(1, memRaw.size() - 2) : "";
+            string val = (!prefixText.empty()) ? (prefixText + " " + memRaw) : memRaw;
+            op = makeOperand("MEM", val, startCol);
+            op.size = explicitSize;
+            if (!parseMemoryExpression(inside, op.baseReg, op.indexReg, op.scale,
+                                       op.displacement, op.symbol)) {
+                addError(errors, "Syntax Error", "invalid memory expression '" + memRaw + "'",
+                         curr.line, curr.column);
+                return false;
+            }
+        } else if (curr.type == TokenType::REGISTER) {
+            op = makeOperand("REG", curr.text, startCol);
+            op.size = getRegisterSize(curr.text);
+        } else if (curr.type == TokenType::IMMEDIATE) {
+            op = makeOperand("IMM", curr.text, startCol);
+            op.size = explicitSize;
+            parseNumber(curr.text, op.number);   // already validated by the lexer
+        } else if (curr.type == TokenType::IDENTIFIER) {
+            op = makeOperand("SYM", curr.text, startCol);
+            op.size = explicitSize;
+        } else {
+            addError(errors, "Syntax Error", "expected an operand, found '" + curr.text + "'",
+                     curr.line, curr.column);
+            return false;
+        }
+        instr.operands.push_back(op);
+        idx++;
+
+        if (idx >= tokens.size()) break;               // end of line: done
+
+        if (tokens[idx].type != TokenType::COMMA) {    // operands must be separated by ','
+            addError(errors, "Syntax Error", "expected comma",
+                     tokens[idx].line, tokens[idx].column);
+            return false;
+        }
+        idx++;                                         // skip the comma
+
+        if (idx >= tokens.size()) {                    // line ended right after a comma
+            const Token& comma = tokens[idx - 1];
+            addError(errors, "Syntax Error", "missing operand after comma",
+                     comma.line, comma.column + 1);
+            return false;
+        }
+    }
