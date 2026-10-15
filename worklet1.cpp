@@ -198,4 +198,104 @@ bool isZeroOperandMnemonic(const string& m) {
            m == "MOVSB"   || m == "MOVSW" || m == "MOVSD" ||
            m == "CMPSB"   || m == "CMPSW" || m == "CMPSD" ||
            m == "SCASB"   || m == "SCASW" || m == "SCASD" ||
-   
+             m == "LAHF"    || m == "SAHF"  || m == "CLI"   || m == "STI" ||
+           m == "WAIT";
+}
+
+bool isCondBranchMnemonic(const string& m) {
+    return m == "JE"  || m == "JZ"  || m == "JNE" || m == "JNZ" ||
+           m == "JL"  || m == "JNGE"|| m == "JGE" || m == "JNL" ||
+           m == "JLE" || m == "JNG" || m == "JG"  || m == "JNLE"||
+           m == "JB"  || m == "JNAE"|| m == "JC"  || m == "JAE" ||
+           m == "JNB" || m == "JNC" || m == "JBE" || m == "JNA" ||
+           m == "JA"  || m == "JNBE"|| m == "JS"  || m == "JNS" ||
+           m == "JO"  || m == "JNO" || m == "JP"  || m == "JPE" ||
+           m == "JNP" || m == "JPO";
+}
+
+// ---- added: LOOP family and JECXZ. They exist only as SHORT jumps (opcode + rel8 = 2 bytes),
+// so unlike every other branch their reach is -128..+127 bytes.
+bool isLoopMnemonic(const string& m) {
+    return m == "LOOP" || m == "LOOPE" || m == "LOOPZ" ||
+           m == "LOOPNE" || m == "LOOPNZ" || m == "JECXZ";
+}
+
+bool isBranchMnemonic(const string& m) {
+    return m == "JMP" || m == "CALL" || isCondBranchMnemonic(m);
+}
+
+bool isUnaryRegMnemonic(const string& m) {
+    return m == "INC" || m == "DEC" || m == "PUSH" || m == "POP" ||
+           m == "NOT" || m == "NEG" || m == "MUL"  || m == "DIV" ||
+           m == "IDIV";
+}
+
+bool isBinaryArithLogicMnemonic(const string& m) {
+    return m == "MOV" || m == "ADD" || m == "SUB" || m == "CMP" || m == "ADC" || m == "SBB" ||
+           m == "AND" || m == "OR"  || m == "XOR" || m == "TEST";
+}
+
+bool isShiftMnemonic(const string& m) {
+    return m == "SHL" || m == "SHR" || m == "SAR" || m == "SAL" ||
+           m == "ROL" || m == "ROR" || m == "RCL" || m == "RCR";
+}
+
+// How many operands each mnemonic takes. -1 means "not a valid mnemonic".
+// To support a new instruction, add it here first.
+int expectedOperandCount(const string& m) {
+    if (isZeroOperandMnemonic(m)) return 0;
+    if (isBranchMnemonic(m)) return 1;
+    if (isLoopMnemonic(m)) return 1;
+    if (isUnaryRegMnemonic(m)) return 1;
+    if (m == "INT") return 1;
+    if (isBinaryArithLogicMnemonic(m)) return 2;
+    if (isShiftMnemonic(m)) return 2;
+    if (m == "XCHG") return 2;
+    if (m == "IMUL") return 2;
+    if (isLoadStoreMnemonic(m)) return 2;
+    return -1;
+}
+
+bool isValidMnemonic(const string& upper) {
+    return expectedOperandCount(upper) != -1;
+}
+
+// Reads numbers that fit in 32 bits:
+//     decimal      5   -3   10d
+//     hex          0x1F     0FH   1234h      (a suffix form must START WITH A DIGIT: 0FFH, not FFH,
+//                                              so that names such as BEEFH stay identifiers)
+//     binary       1010b
+//     octal        17o  17q
+// Returns false for anything else. Never throws.
+bool parseNumber(const string& text, long long& value) {
+    size_t i = 0;
+    bool negative = false;
+    if (i < text.size() && (text[i] == '-' || text[i] == '+')) {
+        if (text[i] == '-') negative = true;
+        i++;
+    }
+    if (i >= text.size()) return false;
+
+    int base = 10;
+    size_t end = text.size();
+    if (i + 1 < text.size() && text[i] == '0' && (text[i + 1] == 'x' || text[i + 1] == 'X')) {
+        base = 16;
+        i += 2;
+        if (i >= text.size()) return false;
+    } else if (end - i >= 2 && isdigit((unsigned char)text[i])) {
+        // Intel-style radix suffix on the last character
+        char sfx = (char)tolower((unsigned char)text[end - 1]);
+        if      (sfx == 'h')               { base = 16; end--; }
+        else if (sfx == 'b')               { base = 2;  end--; }
+        else if (sfx == 'o' || sfx == 'q') { base = 8;  end--; }
+        else if (sfx == 'd')               { base = 10; end--; }
+    }
+
+    long long result = 0;
+    for (; i < end; i++) {
+        char c = text[i];
+        int digit;
+        if (c >= '0' && c <= '9')                 digit = c - '0';
+        else if (base == 16 && c >= 'a' && c <= 'f') digit = c - 'a' + 10;
+        else if (base == 16 && c >= 'A' && c <= 'F') digit = c - 'A' + 10;
+      
