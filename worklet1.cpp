@@ -198,7 +198,7 @@ bool isZeroOperandMnemonic(const string& m) {
            m == "MOVSB"   || m == "MOVSW" || m == "MOVSD" ||
            m == "CMPSB"   || m == "CMPSW" || m == "CMPSD" ||
            m == "SCASB"   || m == "SCASW" || m == "SCASD" ||
-             m == "LAHF"    || m == "SAHF"  || m == "CLI"   || m == "STI" ||
+           m == "LAHF"    || m == "SAHF"  || m == "CLI"   || m == "STI" ||
            m == "WAIT";
 }
 
@@ -395,7 +395,6 @@ bool parseMemoryExpression(const string& inside,
             }
             continue;
         }
-
 
         // Check if term is a numeric displacement
         long long numVal = 0;
@@ -629,6 +628,138 @@ bool checkOperandKinds(const Instruction& instr, vector<AsmError>& errors) {
         const Operand& b = instr.operands[1];
         if (a.kind != "REG") {
             addError(errors, "Syntax Error", "LEA destination must be a register",
-                instr.line, a.column);
+                     instr.line, a.column);
             ok = false;
         }
+        // A bare label is accepted too: "LEA EDX, label" == "LEA EDX, [label]" (address of the label).
+        if (b.kind != "MEM" && b.kind != "SYM") {
+            addError(errors, "Syntax Error", "LEA source must be a memory operand",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (m == "ADD" || m == "SUB" || m == "CMP" || m == "ADC" || m == "SBB" ||
+             m == "AND" || m == "OR"  || m == "XOR" || m == "TEST") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "REG" && a.kind != "MEM") {
+            string msg = (a.kind == "SYM") ? "invalid register '" + a.value + "'"
+                                           : "first operand must be a register or memory";
+            addError(errors, "Syntax Error", msg, instr.line, a.column);
+            ok = false;
+        }
+        if (a.kind == "MEM" && b.kind == "MEM") {
+            addError(errors, "Syntax Error", "two memory operands not allowed",
+                     instr.line, b.column);
+            ok = false;
+        }
+        if (b.kind != "REG" && b.kind != "IMM" && b.kind != "MEM") {
+            addError(errors, "Syntax Error",
+                     "invalid second operand '" + b.value + "'",
+                     instr.line, b.column);
+            ok = false;
+        }
+        if (a.kind == "REG" && b.kind == "REG" && getRegisterSize(a.value) != getRegisterSize(b.value)) {
+            addError(errors, "Syntax Error",
+                     "operand size mismatch between '" + a.value + "' and '" + b.value + "'",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (m == "XCHG") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "REG" && a.kind != "MEM") {
+            string msg = (a.kind == "SYM") ? "invalid register '" + a.value + "'"
+                                           : "first operand must be a register or memory";
+            addError(errors, "Syntax Error", msg, instr.line, a.column);
+            ok = false;
+        }
+        if (b.kind != "REG" && (b.kind != "MEM" || a.kind != "REG")) {
+            string msg = (b.kind == "SYM") ? "invalid register '" + b.value + "'"
+                                           : "second operand must be a register";
+            addError(errors, "Syntax Error", msg, instr.line, b.column);
+            ok = false;
+        }
+        if (a.kind == "REG" && b.kind == "REG" && getRegisterSize(a.value) != getRegisterSize(b.value)) {
+            addError(errors, "Syntax Error",
+                     "operand size mismatch between '" + a.value + "' and '" + b.value + "'",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (isShiftMnemonic(m)) {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "REG" && a.kind != "MEM") {
+            string msg = (a.kind == "SYM") ? "invalid register '" + a.value + "'"
+                                           : "first operand must be a register or memory";
+            addError(errors, "Syntax Error", msg, instr.line, a.column);
+            ok = false;
+        }
+        if (b.kind != "IMM" && b.kind != "REG") {
+            addError(errors, "Syntax Error",
+                     "invalid shift count '" + b.value + "' (expected immediate or register)",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (m == "IMUL") {
+        const Operand& a = instr.operands[0];
+        if (a.kind != "REG") {
+            string msg = (a.kind == "SYM") ? "invalid register '" + a.value + "'"
+                                           : "first operand must be a register";
+            addError(errors, "Syntax Error", msg, instr.line, a.column);
+            ok = false;
+        }
+        if (instr.operands.size() > 1) {
+            const Operand& b = instr.operands[1];
+            if (b.kind != "REG" && b.kind != "IMM" && b.kind != "MEM") {
+                addError(errors, "Syntax Error",
+                         "invalid operand '" + b.value + "' (expected register, memory or immediate)",
+                         instr.line, b.column);
+                ok = false;
+            }
+        }
+    }
+    else if (isUnaryRegMnemonic(m)) {
+        const Operand& a = instr.operands[0];
+        if (a.kind != "REG" && a.kind != "MEM") {
+            string msg = (a.kind == "SYM") ? "invalid register '" + a.value + "'"
+                                           : "operand must be a register or memory";
+            addError(errors, "Syntax Error", msg, instr.line, a.column);
+            ok = false;
+        }
+        if ((m == "PUSH" || m == "POP") && a.kind == "REG" && isReg8(a.value)) {
+            addError(errors, "Syntax Error", "cannot " + m + " an 8-bit register",
+                     instr.line, a.column);
+            ok = false;
+        }
+    }
+    else if (m == "INT") {
+        const Operand& a = instr.operands[0];
+        if (a.kind != "IMM") {
+            addError(errors, "Syntax Error",
+                     "operand must be an immediate interrupt number",
+                     instr.line, a.column);
+            ok = false;
+        }
+    }
+    else if (isLoopMnemonic(m)) {
+        const Operand& a = instr.operands[0];
+        if (a.kind != "SYM") {
+            addError(errors, "Syntax Error", m + " needs a label as its target",
+                     instr.line, a.column);
+            ok = false;
+        }
+    }
+    else if (isBranchMnemonic(m)) {
+        const Operand& a = instr.operands[0];
+        if (a.kind != "SYM" && a.kind != "REG" && a.kind != "MEM") {
+            addError(errors, "Syntax Error", "expected a label, register, or memory as branch target",
+                     instr.line, a.column);
+            ok = false;
+        }
+    }
+    return ok;
+}
