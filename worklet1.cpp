@@ -396,3 +396,135 @@ bool parseMemoryExpression(const string& inside,
             continue;
         }
 
+
+        // Check if term is a numeric displacement
+        long long numVal = 0;
+        if (parseNumber(term, numVal)) {
+            displacement += mult * numVal;
+            continue;
+        }
+
+        // Identifier / symbol name (e.g. [start])
+        if (isalpha((unsigned char)term[0]) || term[0] == '_') {
+            symbol = term;
+            continue;
+        }
+
+        return false;
+    }
+    return true;
+}
+
+Operand makeOperand(const string& kind, const string& value, int column) {
+    Operand op;
+    op.kind            = kind;
+    op.value           = value;
+    op.column          = column;
+    op.number          = 0;
+    op.resolved        = false;
+    op.resolvedAddress = 0;
+    op.size            = 0;
+    op.baseReg         = "";
+    op.indexReg        = "";
+    op.scale           = 1;
+    op.displacement    = 0;
+    op.symbol          = "";
+    return op;
+}
+
+// =====================================================================
+//  POOJA : Lexer / Tokenizer
+//  Turns ONE source line into tokens. Every token remembers its line and
+//  column. Bad characters / bad numbers are reported as errors; the lexer
+//  never crashes and never reads outside the string.
+// =====================================================================
+vector<Token> tokenizeLine(const string& line, int lineNumber, vector<AsmError>& errors) {
+    vector<Token> tokens;
+    size_t i = 0;
+
+    while (i < line.size()) {
+        char c = line[i];
+        int column = (int)i + 1;
+
+        // skip white space
+        if (isspace((unsigned char)c)) { i++; continue; }
+
+        // comment: ignore the rest of the line
+        if (c == ';') break;
+
+        // comma
+        if (c == ',') {
+            tokens.push_back({TokenType::COMMA, ",", lineNumber, column});
+            i++;
+            continue;
+        }
+
+        // memory bracket: [ ... ]
+        if (c == '[') {
+            size_t start = i;
+            int bracketColumn = column;
+            i++; // skip '['
+            while (i < line.size() && line[i] != ']' && line[i] != ';') i++;
+            if (i < line.size() && line[i] == ']') {
+                i++; // include ']'
+                string memText = line.substr(start, i - start);
+                tokens.push_back({TokenType::MEMORY, memText, lineNumber, bracketColumn});
+            } else {
+                addError(errors, "Lexical Error", "missing closing ']' for memory operand",
+                         lineNumber, bracketColumn);
+            }
+            continue;
+        }
+
+        // number: starts with a digit, or '-' / '+' followed by a digit
+        if (isdigit((unsigned char)c) ||
+            ((c == '-' || c == '+') && i + 1 < line.size() && isdigit((unsigned char)line[i + 1]))) {
+            size_t start = i;
+            i++;
+            while (i < line.size() && (isalnum((unsigned char)line[i]) || line[i] == '_')) i++;
+            string text = line.substr(start, i - start);
+
+            long long ignored;
+            if (parseNumber(text, ignored)) {
+                tokens.push_back({TokenType::IMMEDIATE, text, lineNumber, column});
+            } else {
+                addError(errors, "Lexical Error", "invalid immediate '" + text + "'",
+                         lineNumber, column);
+            }
+            continue;
+        }
+
+        // word: mnemonic, register, label or identifier
+        if (isalpha((unsigned char)c) || c == '_') {
+            size_t start = i;
+            while (i < line.size() && (isalnum((unsigned char)line[i]) || line[i] == '_')) i++;
+            string word  = line.substr(start, i - start);
+            string upper = toUpper(word);
+
+            bool followedByColon = (i < line.size() && line[i] == ':');
+
+            if (followedByColon) {
+                i++;   // consume ':'
+                if (isValidMnemonic(upper) || isValidRegister(upper)) {
+                    addError(errors, "Lexical Error",
+                             "label name '" + word + "' is a reserved word", lineNumber, column);
+                } else {
+                    tokens.push_back({TokenType::LABEL, word, lineNumber, column});
+                }
+            } else if (isValidMnemonic(upper)) {
+                tokens.push_back({TokenType::MNEMONIC, upper, lineNumber, column});
+            } else if (isValidRegister(upper)) {
+                tokens.push_back({TokenType::REGISTER, upper, lineNumber, column});
+            } else {
+                tokens.push_back({TokenType::IDENTIFIER, word, lineNumber, column});
+            }
+            continue;
+        }
+
+        // anything else is not part of our language
+        addError(errors, "Lexical Error", string("invalid character '") + c + "'",
+                 lineNumber, column);
+        i++;
+    }
+    return tokens;
+}
