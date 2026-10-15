@@ -98,3 +98,104 @@ struct Instruction {
     int             column;
     int             displacement;  // branches only: target - (address+length)
 };
+
+// A label found by the parser. instrIndex = index of the instruction that
+// follows it (so Pass 1 knows which address the label gets).
+struct LabelDef {
+    string name;
+    int    instrIndex;
+    int    line;
+    int    column;
+};
+
+struct Symbol {
+    string       name;
+    unsigned int address;
+    int          line;      // where it was defined (for duplicate errors)
+};
+
+struct AsmError {
+    string category;   // "Lexical Error", "Syntax Error", "Symbol Error"
+    string message;
+    int    line;
+    int    column;
+};
+
+// Everything Worklet 1 hands over to the next worklets.
+struct Worklet1Output {
+    vector<Instruction>           instructions;
+    unordered_map<string, Symbol> symbolTable;
+    vector<AsmError>              errors;
+    unsigned int                  finalLC;   // total code size in bytes
+    bool                          ok;        // true if no errors at all
+};
+
+// ---------------------------------------------------------------------
+// SMALL HELPERS
+// ---------------------------------------------------------------------
+
+void addError(vector<AsmError>& errors, const string& category,
+              const string& message, int line, int column) {
+    AsmError e;
+    e.category = category;
+    e.message  = message;
+    e.line     = line;
+    e.column   = column;
+    errors.push_back(e);
+}
+
+string toUpper(string s) {
+    for (size_t i = 0; i < s.size(); i++) s[i] = (char)toupper((unsigned char)s[i]);
+    return s;
+}
+
+bool isReg32(const string& r) {
+    return r == "EAX" || r == "EBX" || r == "ECX" || r == "EDX" ||
+           r == "ESI" || r == "EDI" || r == "ESP" || r == "EBP";
+}
+
+bool isReg16(const string& r) {
+    return r == "AX" || r == "BX" || r == "CX" || r == "DX" ||
+           r == "SI" || r == "DI" || r == "SP" || r == "BP";
+}
+
+bool isReg8(const string& r) {
+    return r == "AL" || r == "BL" || r == "CL" || r == "DL" ||
+           r == "AH" || r == "BH" || r == "CH" || r == "DH";
+}
+
+bool isSegmentReg(const string& r) {
+    return r == "CS" || r == "DS" || r == "SS" || r == "ES" ||
+           r == "FS" || r == "GS";
+}
+
+bool isValidRegister(const string& upper) {
+    return isReg32(upper) || isReg16(upper) || isReg8(upper) || isSegmentReg(upper);
+}
+
+int getRegisterSize(const string& upper) {
+    if (isReg32(upper)) return 32;
+    if (isReg16(upper)) return 16;
+    if (isReg8(upper)) return 8;
+    if (isSegmentReg(upper)) return 16;
+    return 0;
+}
+
+bool isLoadStoreMnemonic(const string& m) {
+    return m == "LOAD" || m == "STORE" || m == "LEA";
+}
+
+bool isZeroOperandMnemonic(const string& m) {
+    return m == "NOP"     || m == "RET"   || m == "CDQ"   || m == "CWD"   ||
+           m == "CBW"     || m == "CWDE"  || m == "PUSHAD"|| m == "PUSHA" ||
+           m == "POPAD"   || m == "POPA"  || m == "PUSHFD"|| m == "PUSHF" ||
+           m == "POPFD"   || m == "POPF"  || m == "CLC"   || m == "STC"   ||
+           m == "CMC"     || m == "CLD"   || m == "STD"   || m == "LEAVE" ||
+           m == "HLT"     || m == "LODS"  || m == "LODSB" || m == "LODSW" ||
+           m == "LODSD"   || m == "STOS"  || m == "STOSB" || m == "STOSW" ||
+           m == "STOSD"   ||
+           // ---- added: remaining string ops and flag / control instructions ----
+           m == "MOVSB"   || m == "MOVSW" || m == "MOVSD" ||
+           m == "CMPSB"   || m == "CMPSW" || m == "CMPSD" ||
+           m == "SCASB"   || m == "SCASW" || m == "SCASD" ||
+   
