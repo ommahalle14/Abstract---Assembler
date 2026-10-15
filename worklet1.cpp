@@ -528,3 +528,107 @@ vector<Token> tokenizeLine(const string& line, int lineNumber, vector<AsmError>&
     }
     return tokens;
 }
+
+// =====================================================================
+//  OM : Parser  (tokens -> Instruction IR)
+//  Grammar of one line:   [LABEL] [MNEMONIC [operand {, operand}]]
+// =====================================================================
+
+// Checks that the operand KINDS are legal for this mnemonic.
+bool checkOperandKinds(const Instruction& instr, vector<AsmError>& errors) {
+    const string& m = instr.mnemonic;
+    bool ok = true;
+
+    if (m == "MOV") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+
+        if (a.kind != "REG" && a.kind != "MEM") {
+            addError(errors, "Syntax Error", "destination must be a register or memory operand",
+                     instr.line, a.column);
+            ok = false;
+        }
+        if (a.kind == "MEM" && b.kind == "MEM") {
+            addError(errors, "Syntax Error", "memory to memory move is not supported",
+                     instr.line, b.column);
+            ok = false;
+        }
+        if (b.kind != "REG" && b.kind != "IMM" && b.kind != "MEM") {
+            addError(errors, "Syntax Error", "invalid source operand '" + b.value + "'",
+                     instr.line, b.column);
+            ok = false;
+        }
+
+        // Size mismatch checks
+        if (a.kind == "REG" && b.kind == "REG") {
+            if (getRegisterSize(a.value) != getRegisterSize(b.value)) {
+                addError(errors, "Syntax Error",
+                         "operand size mismatch between '" + a.value + "' and '" + b.value + "'",
+                         instr.line, b.column);
+                ok = false;
+            }
+        } else if (a.kind == "REG" && b.kind == "MEM") {
+            if (b.size != 0 && getRegisterSize(a.value) != b.size) {
+                addError(errors, "Syntax Error",
+                         "operand size mismatch between register '" + a.value + "' and memory operand",
+                         instr.line, b.column);
+                ok = false;
+            }
+        } else if (a.kind == "MEM" && b.kind == "REG") {
+            if (a.size != 0 && a.size != getRegisterSize(b.value)) {
+                addError(errors, "Syntax Error",
+                         "operand size mismatch between memory operand and register '" + b.value + "'",
+                         instr.line, b.column);
+                ok = false;
+            }
+        } else if (a.kind == "REG" && b.kind == "IMM") {
+            int rSize = getRegisterSize(a.value);
+            if (rSize == 8 && (b.number < -128 || b.number > 255)) {
+                addError(errors, "Syntax Error",
+                         "immediate '" + b.value + "' exceeds 8-bit range",
+                         instr.line, b.column);
+                ok = false;
+            } else if (rSize == 16 && (b.number < -32768 || b.number > 65535)) {
+                addError(errors, "Syntax Error",
+                         "immediate '" + b.value + "' exceeds 16-bit range",
+                         instr.line, b.column);
+                ok = false;
+            }
+        }
+    }
+    else if (m == "LOAD") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "REG") {
+            addError(errors, "Syntax Error", "LOAD destination must be a register",
+                     instr.line, a.column);
+            ok = false;
+        }
+        if (b.kind != "MEM" && b.kind != "REG" && b.kind != "IMM" && b.kind != "SYM") {
+            addError(errors, "Syntax Error", "LOAD source must be a memory, register, immediate, or address operand",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (m == "STORE") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "MEM" && a.kind != "REG" && a.kind != "IMM" && a.kind != "SYM") {
+            addError(errors, "Syntax Error", "STORE destination must be a memory, register, or address operand",
+                     instr.line, a.column);
+            ok = false;
+        }
+        if (b.kind != "REG") {
+            addError(errors, "Syntax Error", "STORE source must be a register",
+                     instr.line, b.column);
+            ok = false;
+        }
+    }
+    else if (m == "LEA") {
+        const Operand& a = instr.operands[0];
+        const Operand& b = instr.operands[1];
+        if (a.kind != "REG") {
+            addError(errors, "Syntax Error", "LEA destination must be a register",
+                instr.line, a.column);
+            ok = false;
+        }
