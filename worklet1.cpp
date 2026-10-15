@@ -298,4 +298,101 @@ bool parseNumber(const string& text, long long& value) {
         if (c >= '0' && c <= '9')                 digit = c - '0';
         else if (base == 16 && c >= 'a' && c <= 'f') digit = c - 'a' + 10;
         else if (base == 16 && c >= 'A' && c <= 'F') digit = c - 'A' + 10;
-      
+        else return false;
+        if (digit >= base) return false;           // e.g. 102b, 19o
+
+        result = result * base + digit;
+        if (result > 4294967295LL) return false;   // more than 32 bits
+    }
+    if (negative) {
+        result = -result;
+        if (result < -2147483648LL) return false;
+    }
+    value = result;
+    return true;
+}
+
+// Parses inside of [ ... ], e.g. "EAX", "EBX + 4", "EBP - 8", "0x1000", "start", "EAX + ECX*4 + 8"
+bool parseMemoryExpression(const string& inside,
+                           string& baseReg, string& indexReg, int& scale,
+                           long long& displacement, string& symbol) {
+    string str;
+    for (size_t k = 0; k < inside.size(); k++) {
+        if (!isspace((unsigned char)inside[k])) str += inside[k];
+    }
+    if (str.empty()) return false;
+
+    vector<string> terms;
+    vector<char> ops;
+    size_t i = 0;
+    if (str[0] == '+' || str[0] == '-') {
+        ops.push_back(str[0]);
+        i = 1;
+    } else {
+        ops.push_back('+');
+    }
+
+    size_t termStart = i;
+    for (; i <= str.size(); i++) {
+        if (i == str.size() || str[i] == '+' || str[i] == '-') {
+            if (i > termStart) {
+                terms.push_back(str.substr(termStart, i - termStart));
+            }
+            if (i < str.size()) {
+                ops.push_back(str[i]);
+                termStart = i + 1;
+            }
+        }
+    }
+
+    if (terms.size() != ops.size()) return false;
+
+    baseReg = "";
+    indexReg = "";
+    scale = 1;
+    displacement = 0;
+    symbol = "";
+
+    for (size_t t = 0; t < terms.size(); t++) {
+        string term = terms[t];
+        char sign = ops[t];
+        long long mult = (sign == '-') ? -1 : 1;
+
+        // Check for scaled index: e.g. ECX*4 or 4*ECX
+        size_t starPos = term.find('*');
+        if (starPos != string::npos) {
+            string p1 = term.substr(0, starPos);
+            string p2 = term.substr(starPos + 1);
+            string rPart, sPart;
+            if (isValidRegister(toUpper(p1))) {
+                rPart = toUpper(p1);
+                sPart = p2;
+            } else if (isValidRegister(toUpper(p2))) {
+                rPart = toUpper(p2);
+                sPart = p1;
+            } else {
+                return false;
+            }
+            long long scVal = 1;
+            if (!parseNumber(sPart, scVal) || (scVal != 1 && scVal != 2 && scVal != 4 && scVal != 8)) {
+                return false;
+            }
+            indexReg = rPart;
+            scale = (int)scVal;
+            continue;
+        }
+
+        // Check if term is a register
+        string upperTerm = toUpper(term);
+        if (isValidRegister(upperTerm)) {
+            if (baseReg.empty()) {
+                baseReg = upperTerm;
+            } else if (indexReg.empty()) {
+                indexReg = upperTerm;
+                scale = 1;
+            } else {
+                return false;
+            }
+            continue;
+        }
+
