@@ -977,3 +977,300 @@ bool fitsInt8(long long n) {
     if (n > 2147483647LL) n -= 4294967296LL;   // 0xFFFFFFFF is really -1
     return n >= -128 && n <= 127;
 }
+
+
+int getMemoryOperandDisplacementSize(const Operand& op) {
+    if (!op.symbol.empty()) return 4;
+    if (op.baseReg.empty()) return 4;          // [disp32] and [index*scale+disp32]
+    if (op.displacement == 0) {
+        if (op.baseReg == "EBP" || op.baseReg == "BP") return 1;
+        return 0;
+    }
+    if (fitsInt8(op.displacement)) return 1;
+    return 4;
+}
+
+bool hasSIB(const Operand& op) {
+    if (!op.indexReg.empty()) return true;
+    if (op.baseReg == "ESP") return true;
+    return false;
+}
+
+// Bytes after the opcode that a memory operand adds: SIB + displacement.
+int memExtraLength(const Operand& op) {
+    return (hasSIB(op) ? 1 : 0) + getMemoryOperandDisplacementSize(op);
+}
+
+// Data size (8/16/32) of the operation: a register operand decides, else a sized
+// memory operand, else 32. Mirrors how Worklet 2 resolves it.
+int operationBits(const Instruction& instr) {
+    int memBits = 0;
+    for (size_t k = 0; k < instr.operands.size(); k++) {
+        const Operand& o = instr.operands[k];
+        if (o.kind == "REG") return getRegisterSize(o.value);
+        if (o.kind == "MEM" && o.size != 0) memBits = o.size;
+    }
+    return memBits ? memBits : 32;
+}
+
+// Size of an immediate field for an operation of this many bits.
+int immFieldBytes(int bits) { return bits == 8 ? 1 : (bits == 16 ? 2 : 4); }
+
+int getInstructionLength(const Instruction& instr) {
+    const string& m = instr.mnemonic;
+
+    // Check if any operand is 16-bit (prefix 0x66)
+    bool is16 = false;
+    for (size_t k = 0; k < instr.operands.size(); k++) {
+        if (instr.operands[k].size == 16) is16 = true;
+        if (instr.operands[k].kind == "REG" && isReg16(instr.operands[k].value)) is16 = true;
+    }
+    int prefixLen = is16 ? 1 : 0;
+
+    // Memory operations: MOV / LOAD / STORE / LEA
+    if (m == "MOV" || m == "LOAD" || m == "STORE" || m == "LEA") {
+        if (instr.operands.size() >= 2) {
+            // Reg, Reg.  LOAD/STORE use one register as an ADDRESS ([reg]); ESP then
+            // needs a SIB byte and EBP a displacement byte.
+            if (instr.operands[0].kind == "REG" && instr.operands[1].kind == "REG") {
+                if (m == "LOAD" || m == "STORE") {
+                    const string& addr = (m == "LOAD") ? instr.operands[1].value : instr.operands[0].value;
+                    return prefixLen + 2 + ((addr == "ESP" || addr == "EBP") ? 1 : 0);
+                }
+                return prefixLen + 2;
+            }
+            // Reg, Imm
+            if (instr.operands[0].kind == "REG" && instr.operands[1].kind == "IMM") {
+                int rSize = getRegisterSize(instr.operands[0].value);
+                if (rSize == 8) return 2;
+                if (rSize == 16) return 4;
+                return 5;
+            }
+            // Memory with register
+            const Operand* memOp = nullptr;
+            if (instr.operands[0].kind == "MEM") memOp = &instr.operands[0];
+            else if (instr.operands[1].kind == "MEM") memOp = &instr.operands[1];
+
+            if (memOp) {
+                int len = prefixLen + 1 + 1 + memExtraLength(*memOp);
+                // MOV [mem], imm carries the immediate after the addressing bytes.
+                if (m == "MOV" && instr.operands[1].kind == "IMM") len += immFieldBytes(operationBits(instr));
+                return len;
+            }
+
+            // LOAD/STORE with a label are encoded as MOV reg,[label] / MOV [label],reg:
+            // opcode + ModRM + disp32.
+            // LEA reg, label is the same: LEA reg,[label] = opcode + ModRM + disp32.
+            if ((m == "LOAD" || m == "STORE" || m == "LEA") &&
+                (instr.operands[1].kind == "SYM" || instr.operands[0].kind == "SYM")) {
+                return prefixLen + 6;
+            }
+            if (instr.operands[1].kind == "IMM" || instr.operands[1].kind == "SYM") {
+                return prefixLen + 5;
+            }
+            if (instr.operands[0].kind == "IMM" || instr.operands[0].kind == "SYM") {
+                return prefixLen + 5;
+            }
+        }
+        return prefixLen + 2;
+    }
+
+    if (m == "ADD" || m == "SUB" || m == "CMP" || m == "ADC" || m == "SBB" ||
+        m == "AND" || m == "OR" || m == "XOR") {
+        if (instr.operands.size() >= 2) {
+            if (instr.operands[0].kind == "MEM" || instr.operands[1].kind == "MEM") {
+                const Operand& memOp = (instr.operands[0].kind == "MEM") ? instr.operands[0] : instr.operands[1];
+                int len = prefixLen + 2 + memExtraLength(memOp);
+                if (instr.operands[1].kind == "IMM") {          // [mem], imm
+                    int bits = operationBits(instr);
+                    len += (bits == 8 || fitsInt8(instr.operands[1].number)) ? 1 : immFieldBytes(bits);
+                }
+                return len;
+            }
+            if (instr.operands[1].kind == "REG") {
+                return prefixLen + 2;
+            }
+            if (instr.operands[1].kind == "IMM") {
+                int rSize = getRegisterSize(instr.operands[0].value);
+                if (rSize == 8) {
+                    if (instr.operands[0].value == "AL") return 2;
+                    return 3;
+                }
+                if (fitsInt8(instr.operands[1].number)) return prefixLen + 3;
+                if (instr.operands[0].value == "EAX" || instr.operands[0].value == "AX") {
+                    return prefixLen + (is16 ? 3 : 5);
+                }
+                return prefixLen + (is16 ? 4 : 6);
+            }
+        }
+        return prefixLen + 2;
+    }
+
+    if (m == "TEST") {
+        if (instr.operands.size() >= 2) {
+            if (instr.operands[0].kind == "MEM" || instr.operands[1].kind == "MEM") {
+                const Operand& memOp = (instr.operands[0].kind == "MEM") ? instr.operands[0] : instr.operands[1];
+                int len = prefixLen + 2 + memExtraLength(memOp);
+                if (instr.operands[1].kind == "IMM") len += immFieldBytes(operationBits(instr));  // TEST has no imm8 form
+                return len;
+            }
+            if (instr.operands[1].kind == "REG") return prefixLen + 2;
+            int rSize = getRegisterSize(instr.operands[0].value);
+            if (rSize == 8) {
+                if (instr.operands[0].value == "AL") return 2;
+                return 3;
+            }
+            if (instr.operands[0].value == "EAX" || instr.operands[0].value == "AX") {
+                return prefixLen + (is16 ? 3 : 5);
+            }
+            return prefixLen + (is16 ? 4 : 6);
+        }
+        return prefixLen + 2;
+    }
+
+    if (m == "XCHG") {
+        if (instr.operands.size() >= 2) {
+            if (instr.operands[0].kind == "REG" && instr.operands[1].kind == "REG") {
+                if (instr.operands[0].value == "EAX" || instr.operands[1].value == "EAX") return 1;
+                if (instr.operands[0].value == "AX" || instr.operands[1].value == "AX") return 2;
+                return prefixLen + 2;
+            }
+            const Operand& memOp = (instr.operands[0].kind == "MEM") ? instr.operands[0] : instr.operands[1];
+            int sibLen = hasSIB(memOp) ? 1 : 0;
+            int dispLen = getMemoryOperandDisplacementSize(memOp);
+            return prefixLen + 2 + sibLen + dispLen;
+        }
+        return prefixLen + 2;
+    }
+
+    if (m == "IMUL") {
+        if (instr.operands.size() == 1) {                          // F6/F7 /5 r/m
+            int len = prefixLen + 2;
+            if (instr.operands[0].kind == "MEM") len += memExtraLength(instr.operands[0]);
+            return len;
+        }
+        const Operand& src = instr.operands[1];
+        if (src.kind == "MEM") return prefixLen + 3 + memExtraLength(src);   // 0F AF /r
+        if (src.kind == "IMM" && !fitsInt8(src.number))                      // 69 /r id|iw
+            return prefixLen + 2 + immFieldBytes(operationBits(instr));
+        return prefixLen + 3;                                                // 0F AF /r  or  6B /r ib
+    }
+
+    if (isShiftMnemonic(m)) {
+        int baseLen = 2;
+        if (instr.operands.size() >= 2 && instr.operands[1].kind == "IMM" && instr.operands[1].number != 1) {
+            baseLen = 3;
+        }
+        if (!instr.operands.empty() && instr.operands[0].kind == "MEM") {
+            const Operand& memOp = instr.operands[0];
+            baseLen += (hasSIB(memOp) ? 1 : 0) + getMemoryOperandDisplacementSize(memOp);
+        }
+        return prefixLen + baseLen;
+    }
+
+    if (m == "INC" || m == "DEC") {
+        if (!instr.operands.empty() && instr.operands[0].kind == "REG") {
+            int rSize = getRegisterSize(instr.operands[0].value);
+            if (rSize == 8) return 2;
+            return prefixLen + 1;
+        }
+        if (!instr.operands.empty() && instr.operands[0].kind == "MEM") {
+            const Operand& memOp = instr.operands[0];
+            int sibLen = hasSIB(memOp) ? 1 : 0;
+            int dispLen = getMemoryOperandDisplacementSize(memOp);
+            return prefixLen + 2 + sibLen + dispLen;
+        }
+        return prefixLen + 1;
+    }
+
+    if (m == "PUSH" || m == "POP") {
+        if (!instr.operands.empty() && instr.operands[0].kind == "REG") return prefixLen + 1;
+        if (!instr.operands.empty() && instr.operands[0].kind == "MEM") {
+            const Operand& memOp = instr.operands[0];
+            int sibLen = hasSIB(memOp) ? 1 : 0;
+            int dispLen = getMemoryOperandDisplacementSize(memOp);
+            return prefixLen + 2 + sibLen + dispLen;
+        }
+        return prefixLen + 1;
+    }
+
+    if (m == "NOT" || m == "NEG" || m == "MUL" || m == "DIV" || m == "IDIV") {
+        if (!instr.operands.empty() && instr.operands[0].kind == "REG") {
+            return prefixLen + 2;
+        }
+        if (!instr.operands.empty() && instr.operands[0].kind == "MEM") {
+            const Operand& memOp = instr.operands[0];
+            int sibLen = hasSIB(memOp) ? 1 : 0;
+            int dispLen = getMemoryOperandDisplacementSize(memOp);
+            return prefixLen + 2 + sibLen + dispLen;
+        }
+        return prefixLen + 2;
+    }
+
+    if (m == "INT") return 2;
+
+    // 16-bit forms carry a 0x66 prefix in 32-bit code: opcode is 2 bytes.
+    if (m == "CWD" || m == "CBW" || m == "PUSHA" || m == "POPA" ||
+        m == "PUSHF" || m == "POPF" || m == "LODSW" || m == "STOSW" ||
+        m == "MOVSW" || m == "CMPSW" || m == "SCASW") return 2;
+    if (m == "LODS" || m == "STOS") {            // optional operand only selects the size
+        int bits = 32;
+        if (instr.operands.size() == 1) {
+            const Operand& o = instr.operands[0];
+            if (o.kind == "REG") bits = getRegisterSize(o.value);
+            else if (o.kind == "MEM" && o.size != 0) bits = o.size;
+        }
+        return bits == 16 ? 2 : 1;
+    }
+    if (isZeroOperandMnemonic(m)) return 1;
+
+    if (m == "JMP" || m == "CALL") {
+        if (!instr.operands.empty() && instr.operands[0].kind == "REG") return prefixLen + 2;
+        if (!instr.operands.empty() && instr.operands[0].kind == "MEM") {
+            const Operand& memOp = instr.operands[0];
+            return prefixLen + 2 + (hasSIB(memOp) ? 1 : 0) + getMemoryOperandDisplacementSize(memOp);
+        }
+        return 5;
+    }
+
+    if (isLoopMnemonic(m)) return 2;               // opcode + rel8
+
+    if (isBranchMnemonic(m)) return 6;
+
+    return 1;
+}
+
+void defineLabel(const LabelDef& label, unsigned int address,
+                 unordered_map<string, Symbol>& table, vector<AsmError>& errors) {
+    if (!addSymbol(table, label.name, address, label.line)) {
+        addError(errors, "Symbol Error",
+                 "duplicate symbol '" + label.name + "' (first defined at line " +
+                 to_string(table[label.name].line) + ")",
+                 label.line, label.column);
+    }
+}
+
+// Returns the final value of the Location Counter (= total code size).
+unsigned int pass1(vector<Instruction>& instructions, const vector<LabelDef>& labels,
+                   unordered_map<string, Symbol>& table, vector<AsmError>& errors) {
+    unsigned int LC = 0;      // Location Counter starts at 0
+    size_t nextLabel = 0;
+
+    for (size_t i = 0; i < instructions.size(); i++) {
+        // labels that sit just before instruction i get the current LC
+        while (nextLabel < labels.size() && labels[nextLabel].instrIndex == (int)i) {
+            defineLabel(labels[nextLabel], LC, table, errors);
+            nextLabel++;
+        }
+        instructions[i].address = LC;
+        instructions[i].length  = getInstructionLength(instructions[i]);
+        LC += instructions[i].length;
+    }
+    // labels at the very end of the file point to the final LC
+    while (nextLabel < labels.size()) {
+        defineLabel(labels[nextLabel], LC, table, errors);
+        nextLabel++;
+    }
+    return LC;
+}
+
