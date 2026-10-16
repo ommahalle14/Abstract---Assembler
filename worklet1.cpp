@@ -872,3 +872,108 @@ bool parseInstruction(const vector<Token>& tokens, size_t start,
             return false;
         }
     }
+
+    // Infer memory operand size if unspecified and the other operand is a register
+    if (instr.operands.size() == 2) {
+        if (instr.operands[0].kind == "REG" && instr.operands[1].kind == "MEM" && instr.operands[1].size == 0) {
+            instr.operands[1].size = instr.operands[0].size;
+        } else if (instr.operands[0].kind == "MEM" && instr.operands[1].kind == "REG" && instr.operands[0].size == 0) {
+            instr.operands[0].size = instr.operands[1].size;
+        }
+    }
+
+    // 3. operand COUNT must match the mnemonic
+    int expected = expectedOperandCount(instr.mnemonic);
+    int actual   = (int)instr.operands.size();
+
+    bool countOk = (actual == expected);
+    if (instr.mnemonic == "IMUL" && (actual == 1 || actual == 2)) countOk = true;
+    if ((instr.mnemonic == "LODS" || instr.mnemonic == "STOS") && (actual == 0 || actual == 1)) countOk = true;
+
+    if (!countOk) {
+        if (actual < expected) {
+            const Token& last = tokens.back();
+            addError(errors, "Syntax Error",
+                     "missing operand: " + instr.mnemonic + " expects " + to_string(expected) +
+                     " operand(s), found " + to_string(actual),
+                     last.line, last.column + (int)last.text.size());
+            return false;
+        }
+        if (actual > expected) {
+            int errCol = (expected < actual) ? instr.operands[expected].column : (tokens.back().column + (int)tokens.back().text.size());
+            addError(errors, "Syntax Error",
+                     "too many operands: " + instr.mnemonic + " expects " + to_string(expected) +
+                     " operand(s), found " + to_string(actual),
+                     instr.line, errCol);
+            return false;
+        }
+    }
+
+    // 4. operand KINDS must be legal for the mnemonic
+    return checkOperandKinds(instr, errors);
+}
+
+// Handles one whole line: optional label, then optional instruction.
+void parseLine(const vector<Token>& tokens, vector<Instruction>& instructions,
+               vector<LabelDef>& labels, vector<AsmError>& errors) {
+    if (tokens.empty()) return;
+
+    size_t idx = 0;
+    if (tokens[0].type == TokenType::LABEL) {
+        LabelDef label;
+        label.name       = tokens[0].text;
+        label.instrIndex = (int)instructions.size();   // the next instruction
+        label.line       = tokens[0].line;
+        label.column     = tokens[0].column;
+        labels.push_back(label);
+        idx = 1;
+    }
+    if (idx >= tokens.size()) return;                  // label-only line
+
+    Instruction instr;
+    if (parseInstruction(tokens, idx, instr, errors)) {
+        instructions.push_back(instr);
+    }
+}
+
+// =====================================================================
+//  VED : Symbol Table
+// =====================================================================
+bool isDefined(const unordered_map<string, Symbol>& table, const string& name) {
+    return table.find(name) != table.end();
+}
+
+// Returns false if the name already exists (duplicate symbol).
+bool addSymbol(unordered_map<string, Symbol>& table, const string& name,
+               unsigned int address, int line) {
+    if (isDefined(table, name)) return false;
+    Symbol s;
+    s.name    = name;
+    s.address = address;
+    s.line    = line;
+    table[name] = s;
+    return true;
+}
+
+// =====================================================================
+//  VED : Pass 1  (Location Counter + label addresses)
+//
+//  Instruction sizes (chosen so they match a real x86-32 assembler, and
+//  fixed so no size guessing is needed later):
+//      MOV reg, imm          5      (B8+r imm32)
+//      MOV reg, reg          2
+//      ADD/SUB/CMP reg, reg  2
+//      ADD/SUB/CMP reg, imm  3 if imm fits in signed 8 bits (83 /r ib)
+//                            5 if reg is EAX (short form: op imm32)
+//                            6 otherwise (81 /r id)
+//      INC/DEC/PUSH/POP reg  1
+//      NOP / RET             1
+//      JMP / CALL            5      (near, rel32)
+//      JE / JNE              6      (near, 0F 8x rel32)
+//  Branches always use the near form so their size never depends on the
+//  distance to the label. Worklet 2 must encode the same near forms.
+// =====================================================================
+bool fitsInt8(long long n) {
+    if (n > 2147483647LL) n -= 4294967296LL;   // 0xFFFFFFFF is really -1
+    return n >= -128 && n <= 127;
+}
