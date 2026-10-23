@@ -1,0 +1,292 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_023.asm
+================================================================================
+Test Number   : 023
+Test Title    : Test 023: INC and DEC unary operations
+Category      : VALID TEST CASE
+Overall Result: PASS (Valid Assembly Assembled & Linked Successfully)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 023: INC and DEC unary operations
+section .text
+global _start
+_start:
+    ; 32-bit INC / DEC (single-byte 40+r / 48+r opcodes)
+    inc eax
+    inc ecx
+    inc edx
+    inc ebx
+    inc esp
+    inc ebp
+    inc esi
+    inc edi
+
+    dec edi
+    dec esi
+    dec ebp
+    dec esp
+    dec ebx
+    dec edx
+    dec ecx
+    dec eax
+
+    ; 16-bit INC / DEC
+    inc ax
+    inc cx
+    dec dx
+    dec bx
+
+    ; 8-bit INC / DEC
+    inc al
+    inc ah
+    dec bl
+    dec bh
+
+    ; Memory INC / DEC
+    inc dword ptr [ebx]
+    dec dword ptr [esi + 4]
+    inc word ptr [ecx]
+    dec byte ptr [edx]
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_023.asm" (41 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 41 source lines...
+[Worklet 3: splitSource] Split complete: 30 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 41 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 29 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 29 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 29
+Total Defined Labels: 1
+Dense Label Count   : 2 (extId=1)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 4)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   6:     inc eax                    (operands=1, defLabel=0)
+  [1  ] Line 7  :     inc ecx                    (operands=1)
+  [2  ] Line 8  :     inc edx                    (operands=1)
+  [3  ] Line 9  :     inc ebx                    (operands=1)
+  [4  ] Line 10 :     inc esp                    (operands=1)
+  [5  ] Line 11 :     inc ebp                    (operands=1)
+  [6  ] Line 12 :     inc esi                    (operands=1)
+  [7  ] Line 13 :     inc edi                    (operands=1)
+  [8  ] Line 15 :     dec edi                    (operands=1)
+  [9  ] Line 16 :     dec esi                    (operands=1)
+  [10 ] Line 17 :     dec ebp                    (operands=1)
+  [11 ] Line 18 :     dec esp                    (operands=1)
+  [12 ] Line 19 :     dec ebx                    (operands=1)
+  [13 ] Line 20 :     dec edx                    (operands=1)
+  [14 ] Line 21 :     dec ecx                    (operands=1)
+  [15 ] Line 22 :     dec eax                    (operands=1)
+  [16 ] Line 25 :     inc ax                     (operands=1)
+  [17 ] Line 26 :     inc cx                     (operands=1)
+  [18 ] Line 27 :     dec dx                     (operands=1)
+  [19 ] Line 28 :     dec bx                     (operands=1)
+  [20 ] Line 31 :     inc al                     (operands=1)
+  [21 ] Line 32 :     inc ah                     (operands=1)
+  [22 ] Line 33 :     dec bl                     (operands=1)
+  [23 ] Line 34 :     dec bh                     (operands=1)
+  [24 ] Line 37 :     inc dword ptr [ebx]        (operands=1)
+  [25 ] Line 38 :     dec dword ptr [esi + 4]    (operands=1)
+  [26 ] Line 39 :     inc word ptr [ecx]         (operands=1)
+  [27 ] Line 40 :     dec byte ptr [edx]         (operands=1)
+  [28 ] Line 41 :     ret                        (operands=0)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_023.asm" (41 lines). Target: "temp_out\test_023.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 41 source lines...
+[Worklet 3: splitSource] Split complete: 30 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 41 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 29 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 29 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 30 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 44 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 44 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  40                        inc eax
+00000001  41                        inc ecx
+00000002  42                        inc edx
+00000003  43                        inc ebx
+00000004  44                        inc esp
+00000005  45                        inc ebp
+00000006  46                        inc esi
+00000007  47                        inc edi
+00000008  4F                        dec edi
+00000009  4E                        dec esi
+0000000A  4D                        dec ebp
+0000000B  4C                        dec esp
+0000000C  4B                        dec ebx
+0000000D  4A                        dec edx
+0000000E  49                        dec ecx
+0000000F  48                        dec eax
+00000010  66 40                     inc ax
+00000012  66 41                     inc cx
+00000014  66 4A                     dec dx
+00000016  66 4B                     dec bx
+00000018  FE C0                     inc al
+0000001A  FE C4                     inc ah
+0000001C  FE CB                     dec bl
+0000001E  FE CF                     dec bh
+00000020  FF 03                     inc dword ptr [ebx]
+00000022  FF 4E 04                  dec dword ptr [esi + 4]
+00000025  66 FF 01                  inc word ptr [ecx]
+00000028  FE 0A                     dec byte ptr [edx]
+0000002A  C3                        ret
+Total Emitted Bytes: 43
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_023.bin (43 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 43 bytes to temp_out\test_023.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_023.asm" (41 lines). Target: "temp_out\test_023.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 41 source lines...
+[Worklet 3: splitSource] Split complete: 30 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 41 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 29 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 29 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 30 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 44 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 44 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  40                        inc eax
+00000001  41                        inc ecx
+00000002  42                        inc edx
+00000003  43                        inc ebx
+00000004  44                        inc esp
+00000005  45                        inc ebp
+00000006  46                        inc esi
+00000007  47                        inc edi
+00000008  4F                        dec edi
+00000009  4E                        dec esi
+0000000A  4D                        dec ebp
+0000000B  4C                        dec esp
+0000000C  4B                        dec ebx
+0000000D  4A                        dec edx
+0000000E  49                        dec ecx
+0000000F  48                        dec eax
+00000010  66 40                     inc ax
+00000012  66 41                     inc cx
+00000014  66 4A                     dec dx
+00000016  66 4B                     dec bx
+00000018  FE C0                     inc al
+0000001A  FE C4                     inc ah
+0000001C  FE CB                     dec bl
+0000001E  FE CF                     dec bh
+00000020  FF 03                     inc dword ptr [ebx]
+00000022  FF 4E 04                  dec dword ptr [esi + 4]
+00000025  66 FF 01                  inc word ptr [ecx]
+00000028  FE 0A                     dec byte ptr [edx]
+0000002A  C3                        ret
+Total Emitted Bytes: 43
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_023_pipe.bin (43 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 1 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 1 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[Worklet 1: buildSymbolTable] .symtab built with 3 symbol entries (48 bytes), .strtab 8 bytes; passed directly to Worklet 3.
+
+>>> Phase 5: ELF Relocation & Object Generation (Worklet 3: writeElf) <<<
+[Worklet 3: buildRelocs] No relocations to process.
+[Worklet 3: writeElf] Laying out ELF32 object file with 4 payload section(s) -> "temp_out\test_023.o"...
+[Worklet 3: writeElf] Wrote 388 bytes -> "temp_out\test_023.o" (6 sections including NULL+shstrtab).
+[Worklet 3: checkElf] Running self-check on "temp_out\test_023.o"...
+[Worklet 3: checkElf] Self-check passed: ELF32 relocatable object is well-formed.
+wrote temp_out\test_023.o (ELF32 relocatable): .text 43 bytes, .data 0 bytes, .bss 0 bytes, 0 relocation(s)
+
+[Worklet 3: dumpElf] Reading ELF structures from "temp_out\test_023.o"...
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              REL (Relocatable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          0 (bytes into file)
+  Start of section headers:          188 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           0 (bytes)
+  Number of program headers:         0
+  Size of section headers:           40 (bytes)
+  Number of section headers:         5
+  Section header string table index: 4
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00000000 000034 00002b 00  AX  0   0 16
+  [ 2] .symtab           SYMTAB          00000000 000060 000030 10      3   2  4
+  [ 3] .strtab           STRTAB          00000000 000090 000008 00      0   0  1
+  [ 4] .shstrtab         STRTAB          00000000 000098 000021 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: SUCCESS
+- Verification Note: Valid Assembly Assembled & Linked Successfully
+================================================================================

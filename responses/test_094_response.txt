@@ -1,0 +1,92 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_094.asm
+================================================================================
+Test Number   : 094
+Test Title    : Test 094 [ERROR]: Syntax error: multiple labels in memory operand
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Syntax Error at line 8, column 14: only one label is allowed in a memory operand ('[lbl_one+lbl_two]'))
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 094 [ERROR]: Syntax error: multiple labels in memory operand
+; Stage: Worklet 1 (parseAssemblySource)
+; Expected Error: Syntax Error ... only one label is allowed in a memory operand
+section .text
+lbl_one: nop
+lbl_two: nop
+_start:
+    mov eax, [lbl_one+lbl_two]
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_094.asm" (8 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 3 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 8, column 14: only one label is allowed in a memory operand ('[lbl_one+lbl_two]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_094.asm" (8 lines). Target: "temp_out\test_094.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 3 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 8, column 14: only one label is allowed in a memory operand ('[lbl_one+lbl_two]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_094.asm" (8 lines). Target: "temp_out\test_094.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 3 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 8, column 14: only one label is allowed in a memory operand ('[lbl_one+lbl_two]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Syntax Error at line 8, column 14: only one label is allowed in a memory operand ('[lbl_one+lbl_two]')
+================================================================================

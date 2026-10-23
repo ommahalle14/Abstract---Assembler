@@ -1,0 +1,239 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_027.asm
+================================================================================
+Test Number   : 027
+Test Title    : Test 027: IMUL (1-operand, 2-operand, and 3-operand forms)
+Category      : VALID TEST CASE
+Overall Result: PASS (Valid Assembly Assembled & Linked Successfully)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 027: IMUL (1-operand, 2-operand, and 3-operand forms)
+section .text
+global _start
+_start:
+    ; 1-operand IMUL (register only)
+    imul ecx
+    imul edx
+    imul ax
+    imul bx
+    imul al
+    imul bl
+
+    ; 2-operand IMUL: r, r
+    imul eax, ebx
+    imul ecx, edx
+    imul ax, bx
+
+    ; 3-operand IMUL: r, r, imm (imm8 and imm32)
+    imul eax, ebx, 5
+    imul ebx, ecx, 1000
+    imul ax, bx, 10
+
+    ; 2-operand IMUL: r, mem
+    imul eax, dword ptr [ebx]
+    imul ecx, dword ptr [esi + 4]
+    imul ax, word ptr [edx]
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_027.asm" (27 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 27 source lines...
+[Worklet 3: splitSource] Split complete: 17 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 27 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 16 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 16 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 16
+Total Defined Labels: 1
+Dense Label Count   : 2 (extId=1)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 4)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   6:     imul ecx                   (operands=1, defLabel=0)
+  [1  ] Line 7  :     imul edx                   (operands=1)
+  [2  ] Line 8  :     imul ax                    (operands=1)
+  [3  ] Line 9  :     imul bx                    (operands=1)
+  [4  ] Line 10 :     imul al                    (operands=1)
+  [5  ] Line 11 :     imul bl                    (operands=1)
+  [6  ] Line 14 :     imul eax, ebx              (operands=2)
+  [7  ] Line 15 :     imul ecx, edx              (operands=2)
+  [8  ] Line 16 :     imul ax, bx                (operands=2)
+  [9  ] Line 19 :     imul eax, ebx, 5           (operands=3)
+  [10 ] Line 20 :     imul ebx, ecx, 1000        (operands=3)
+  [11 ] Line 21 :     imul ax, bx, 10            (operands=3)
+  [12 ] Line 24 :     imul eax, dword ptr [ebx]  (operands=2)
+  [13 ] Line 25 :     imul ecx, dword ptr [esi + 4] (operands=2)
+  [14 ] Line 26 :     imul ax, word ptr [edx]    (operands=2)
+  [15 ] Line 27 :     ret                        (operands=0)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_027.asm" (27 lines). Target: "temp_out\test_027.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 27 source lines...
+[Worklet 3: splitSource] Split complete: 17 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 27 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 16 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 16 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 17 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 50 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 50 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  F7 E9                     imul ecx
+00000002  F7 EA                     imul edx
+00000004  66 F7 E8                  imul ax
+00000007  66 F7 EB                  imul bx
+0000000A  F6 E8                     imul al
+0000000C  F6 EB                     imul bl
+0000000E  0F AF C3                  imul eax, ebx
+00000011  0F AF CA                  imul ecx, edx
+00000014  66 0F AF C3               imul ax, bx
+00000018  6B C3 05                  imul eax, ebx, 5
+0000001B  69 D9 E8 03 00 00         imul ebx, ecx, 1000
+00000021  66 6B C3 0A               imul ax, bx, 10
+00000025  0F AF 03                  imul eax, dword ptr [ebx]
+00000028  0F AF 4E 04               imul ecx, dword ptr [esi + 4]
+0000002C  66 0F AF 02               imul ax, word ptr [edx]
+00000030  C3                        ret
+Total Emitted Bytes: 49
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_027.bin (49 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 49 bytes to temp_out\test_027.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_027.asm" (27 lines). Target: "temp_out\test_027.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 27 source lines...
+[Worklet 3: splitSource] Split complete: 17 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 27 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 16 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 16 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 17 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 50 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 50 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  F7 E9                     imul ecx
+00000002  F7 EA                     imul edx
+00000004  66 F7 E8                  imul ax
+00000007  66 F7 EB                  imul bx
+0000000A  F6 E8                     imul al
+0000000C  F6 EB                     imul bl
+0000000E  0F AF C3                  imul eax, ebx
+00000011  0F AF CA                  imul ecx, edx
+00000014  66 0F AF C3               imul ax, bx
+00000018  6B C3 05                  imul eax, ebx, 5
+0000001B  69 D9 E8 03 00 00         imul ebx, ecx, 1000
+00000021  66 6B C3 0A               imul ax, bx, 10
+00000025  0F AF 03                  imul eax, dword ptr [ebx]
+00000028  0F AF 4E 04               imul ecx, dword ptr [esi + 4]
+0000002C  66 0F AF 02               imul ax, word ptr [edx]
+00000030  C3                        ret
+Total Emitted Bytes: 49
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_027_pipe.bin (49 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 1 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 1 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[Worklet 1: buildSymbolTable] .symtab built with 3 symbol entries (48 bytes), .strtab 8 bytes; passed directly to Worklet 3.
+
+>>> Phase 5: ELF Relocation & Object Generation (Worklet 3: writeElf) <<<
+[Worklet 3: buildRelocs] No relocations to process.
+[Worklet 3: writeElf] Laying out ELF32 object file with 4 payload section(s) -> "temp_out\test_027.o"...
+[Worklet 3: writeElf] Wrote 396 bytes -> "temp_out\test_027.o" (6 sections including NULL+shstrtab).
+[Worklet 3: checkElf] Running self-check on "temp_out\test_027.o"...
+[Worklet 3: checkElf] Self-check passed: ELF32 relocatable object is well-formed.
+wrote temp_out\test_027.o (ELF32 relocatable): .text 49 bytes, .data 0 bytes, .bss 0 bytes, 0 relocation(s)
+
+[Worklet 3: dumpElf] Reading ELF structures from "temp_out\test_027.o"...
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              REL (Relocatable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          0 (bytes into file)
+  Start of section headers:          196 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           0 (bytes)
+  Number of program headers:         0
+  Size of section headers:           40 (bytes)
+  Number of section headers:         5
+  Section header string table index: 4
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00000000 000034 000031 00  AX  0   0 16
+  [ 2] .symtab           SYMTAB          00000000 000068 000030 10      3   2  4
+  [ 3] .strtab           STRTAB          00000000 000098 000008 00      0   0  1
+  [ 4] .shstrtab         STRTAB          00000000 0000a0 000021 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: SUCCESS
+- Verification Note: Valid Assembly Assembled & Linked Successfully
+================================================================================

@@ -1,0 +1,66 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_061.asm
+================================================================================
+Test Number   : 061
+Test Title    : Test 061 [ERROR]: Unknown section directive name
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Syntax Error at line 4, column 1: unknown section '.MY_CUSTOM_SECTION')
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 061 [ERROR]: Unknown section directive name
+; Stage: Worklet 3 (splitSource)
+; Expected Error: unknown section '.MY_CUSTOM_SECTION'
+section .my_custom_section
+_start:
+    nop
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_061.asm" (6 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Syntax Error at line 4, column 1: unknown section '.MY_CUSTOM_SECTION'
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_061.asm" (6 lines). Target: "temp_out\test_061.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Syntax Error at line 4, column 1: unknown section '.MY_CUSTOM_SECTION'
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_061.asm" (6 lines). Target: "temp_out\test_061.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Syntax Error at line 4, column 1: unknown section '.MY_CUSTOM_SECTION'
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Syntax Error at line 4, column 1: unknown section '.MY_CUSTOM_SECTION'
+================================================================================

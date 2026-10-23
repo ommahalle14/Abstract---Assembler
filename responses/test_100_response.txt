@@ -1,0 +1,127 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_100.asm
+================================================================================
+Test Number   : 100
+Test Title    : Test 100 [ERROR]: Symbol error: declared GLOBAL symbol is never defined
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Symbol Table Error: Symbol Error at line 4: Global symbol 'undefined_global_func' is declared but not defined)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 100 [ERROR]: Symbol error: declared GLOBAL symbol is never defined
+; Stage: Worklet 1 (buildSymbolTable)
+; Expected Error: Symbol Error ... Global symbol 'undefined_global_func' is declared but not defined
+global undefined_global_func
+
+section .text
+_start:
+    nop
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_100.asm" (8 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 1
+Total Defined Labels: 1
+Dense Label Count   : 2 (extId=1)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 7)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   8:     nop                        (operands=0, defLabel=0)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_100.asm" (8 lines). Target: "temp_out\test_100.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  90                        nop
+Total Emitted Bytes: 1
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_100.bin (1 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 1 bytes to temp_out\test_100.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_100.asm" (8 lines). Target: "temp_out\test_100.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 8 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  90                        nop
+Total Emitted Bytes: 1
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_100_pipe.bin (1 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 1 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 1 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[STDERR]:
+Symbol Table Error: Symbol Error at line 4: Global symbol 'undefined_global_func' is declared but not defined
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Symbol Table Error: Symbol Error at line 4: Global symbol 'undefined_global_func' is declared but not defined
+================================================================================

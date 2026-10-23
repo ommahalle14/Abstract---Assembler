@@ -1,0 +1,250 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_041.asm
+================================================================================
+Test Number   : 041
+Test Title    : Test 041: String LODS and STOS instructions
+Category      : VALID TEST CASE
+Overall Result: PASS (Valid Assembly Assembled & Linked Successfully)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 041: String LODS and STOS instructions
+section .text
+global _start
+_start:
+    ; Specific byte, word, and dword string instructions
+    lodsb
+    lodsw
+    lodsd
+
+    stosb
+    stosw
+    stosd
+
+    ; Generic LODS with register/size operand
+    lods al
+    lods ax
+    lods eax
+    lods byte ptr [esi]
+    lods word ptr [esi]
+    lods dword ptr [esi]
+
+    ; Generic STOS with register/size operand
+    stos al
+    stos ax
+    stos eax
+    stos byte ptr [edi]
+    stos word ptr [edi]
+    stos dword ptr [edi]
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_041.asm" (29 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 29 source lines...
+[Worklet 3: splitSource] Split complete: 20 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 29 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 19 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 19 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 19
+Total Defined Labels: 1
+Dense Label Count   : 2 (extId=1)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 4)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   6:     lodsb                      (operands=0, defLabel=0)
+  [1  ] Line 7  :     lodsw                      (operands=0)
+  [2  ] Line 8  :     lodsd                      (operands=0)
+  [3  ] Line 10 :     stosb                      (operands=0)
+  [4  ] Line 11 :     stosw                      (operands=0)
+  [5  ] Line 12 :     stosd                      (operands=0)
+  [6  ] Line 15 :     lods al                    (operands=0)
+  [7  ] Line 16 :     lods ax                    (operands=0)
+  [8  ] Line 17 :     lods eax                   (operands=0)
+  [9  ] Line 18 :     lods byte ptr [esi]        (operands=0)
+  [10 ] Line 19 :     lods word ptr [esi]        (operands=0)
+  [11 ] Line 20 :     lods dword ptr [esi]       (operands=0)
+  [12 ] Line 23 :     stos al                    (operands=0)
+  [13 ] Line 24 :     stos ax                    (operands=0)
+  [14 ] Line 25 :     stos eax                   (operands=0)
+  [15 ] Line 26 :     stos byte ptr [edi]        (operands=0)
+  [16 ] Line 27 :     stos word ptr [edi]        (operands=0)
+  [17 ] Line 28 :     stos dword ptr [edi]       (operands=0)
+  [18 ] Line 29 :     ret                        (operands=0)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_041.asm" (29 lines). Target: "temp_out\test_041.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 29 source lines...
+[Worklet 3: splitSource] Split complete: 20 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 29 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 19 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 19 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 20 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 26 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 26 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  AC                        lodsb
+00000001  66 AD                     lodsw
+00000003  AD                        lodsd
+00000004  AA                        stosb
+00000005  66 AB                     stosw
+00000007  AB                        stosd
+00000008  AC                        lods al
+00000009  66 AD                     lods ax
+0000000B  AD                        lods eax
+0000000C  AC                        lods byte ptr [esi]
+0000000D  66 AD                     lods word ptr [esi]
+0000000F  AD                        lods dword ptr [esi]
+00000010  AA                        stos al
+00000011  66 AB                     stos ax
+00000013  AB                        stos eax
+00000014  AA                        stos byte ptr [edi]
+00000015  66 AB                     stos word ptr [edi]
+00000017  AB                        stos dword ptr [edi]
+00000018  C3                        ret
+Total Emitted Bytes: 25
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_041.bin (25 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 25 bytes to temp_out\test_041.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_041.asm" (29 lines). Target: "temp_out\test_041.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 29 source lines...
+[Worklet 3: splitSource] Split complete: 20 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 29 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 19 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 19 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 20 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 26 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 26 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  AC                        lodsb
+00000001  66 AD                     lodsw
+00000003  AD                        lodsd
+00000004  AA                        stosb
+00000005  66 AB                     stosw
+00000007  AB                        stosd
+00000008  AC                        lods al
+00000009  66 AD                     lods ax
+0000000B  AD                        lods eax
+0000000C  AC                        lods byte ptr [esi]
+0000000D  66 AD                     lods word ptr [esi]
+0000000F  AD                        lods dword ptr [esi]
+00000010  AA                        stos al
+00000011  66 AB                     stos ax
+00000013  AB                        stos eax
+00000014  AA                        stos byte ptr [edi]
+00000015  66 AB                     stos word ptr [edi]
+00000017  AB                        stos dword ptr [edi]
+00000018  C3                        ret
+Total Emitted Bytes: 25
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_041_pipe.bin (25 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 1 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 1 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[Worklet 1: buildSymbolTable] .symtab built with 3 symbol entries (48 bytes), .strtab 8 bytes; passed directly to Worklet 3.
+
+>>> Phase 5: ELF Relocation & Object Generation (Worklet 3: writeElf) <<<
+[Worklet 3: buildRelocs] No relocations to process.
+[Worklet 3: writeElf] Laying out ELF32 object file with 4 payload section(s) -> "temp_out\test_041.o"...
+[Worklet 3: writeElf] Wrote 372 bytes -> "temp_out\test_041.o" (6 sections including NULL+shstrtab).
+[Worklet 3: checkElf] Running self-check on "temp_out\test_041.o"...
+[Worklet 3: checkElf] Self-check passed: ELF32 relocatable object is well-formed.
+wrote temp_out\test_041.o (ELF32 relocatable): .text 25 bytes, .data 0 bytes, .bss 0 bytes, 0 relocation(s)
+
+[Worklet 3: dumpElf] Reading ELF structures from "temp_out\test_041.o"...
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              REL (Relocatable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          0 (bytes into file)
+  Start of section headers:          172 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           0 (bytes)
+  Number of program headers:         0
+  Size of section headers:           40 (bytes)
+  Number of section headers:         5
+  Section header string table index: 4
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00000000 000034 000019 00  AX  0   0 16
+  [ 2] .symtab           SYMTAB          00000000 000050 000030 10      3   2  4
+  [ 3] .strtab           STRTAB          00000000 000080 000008 00      0   0  1
+  [ 4] .shstrtab         STRTAB          00000000 000088 000021 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: SUCCESS
+- Verification Note: Valid Assembly Assembled & Linked Successfully
+================================================================================

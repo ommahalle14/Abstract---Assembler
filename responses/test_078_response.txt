@@ -1,0 +1,90 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_078.asm
+================================================================================
+Test Number   : 078
+Test Title    : Test 078 [ERROR]: Lexical error: invalid special character
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Lexical Error at line 6, column 14: invalid character '@')
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 078 [ERROR]: Lexical error: invalid special character
+; Stage: Worklet 1 (tokenizeSourceLine)
+; Expected Error: Lexical Error ... invalid character '@'
+section .text
+_start:
+    mov eax, @
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_078.asm" (6 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 6 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 0 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Lexical Error at line 6, column 14: invalid character '@'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_078.asm" (6 lines). Target: "temp_out\test_078.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 6 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 0 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Lexical Error at line 6, column 14: invalid character '@'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_078.asm" (6 lines). Target: "temp_out\test_078.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 6 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 0 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Lexical Error at line 6, column 14: invalid character '@'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Lexical Error at line 6, column 14: invalid character '@'
+================================================================================

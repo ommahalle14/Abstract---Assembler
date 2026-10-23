@@ -1,0 +1,94 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_099.asm
+================================================================================
+Test Number   : 099
+Test Title    : Test 099 [ERROR]: Symbol error: duplicate label defined in .text
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Symbol Error at line 7, column 1: duplicate symbol 'duplicate_label' (first defined at line 5))
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 099 [ERROR]: Symbol error: duplicate label defined in .text
+; Stage: Worklet 1 (parseAssemblySource)
+; Expected Error: Symbol Error ... duplicate symbol 'duplicate_label'
+section .text
+duplicate_label:
+    nop
+duplicate_label:
+    nop
+_start:
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_099.asm" (10 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 10 source lines...
+[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 10 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Symbol Error at line 7, column 1: duplicate symbol 'duplicate_label' (first defined at line 5)
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_099.asm" (10 lines). Target: "temp_out\test_099.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 10 source lines...
+[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 10 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Symbol Error at line 7, column 1: duplicate symbol 'duplicate_label' (first defined at line 5)
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_099.asm" (10 lines). Target: "temp_out\test_099.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 10 source lines...
+[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 10 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 3 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Symbol Error at line 7, column 1: duplicate symbol 'duplicate_label' (first defined at line 5)
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Symbol Error at line 7, column 1: duplicate symbol 'duplicate_label' (first defined at line 5)
+================================================================================

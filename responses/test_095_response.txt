@@ -1,0 +1,91 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_095.asm
+================================================================================
+Test Number   : 095
+Test Title    : Test 095 [ERROR]: Syntax error: label cannot be subtracted in memory operand
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Syntax Error at line 7, column 14: a label cannot be subtracted in a memory operand ('[ebx-my_target]'))
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 095 [ERROR]: Syntax error: label cannot be subtracted in memory operand
+; Stage: Worklet 1 (parseAssemblySource)
+; Expected Error: Syntax Error ... a label cannot be subtracted in a memory operand
+section .text
+my_target: nop
+_start:
+    mov eax, [ebx-my_target]
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_095.asm" (7 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 3 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 7 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 2 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 2 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 7, column 14: a label cannot be subtracted in a memory operand ('[ebx-my_target]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_095.asm" (7 lines). Target: "temp_out\test_095.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 3 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 7 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 2 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 2 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 7, column 14: a label cannot be subtracted in a memory operand ('[ebx-my_target]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_095.asm" (7 lines). Target: "temp_out\test_095.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 3 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 7 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 2 label definitions across 2 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 2 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 7, column 14: a label cannot be subtracted in a memory operand ('[ebx-my_target]')
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Syntax Error at line 7, column 14: a label cannot be subtracted in a memory operand ('[ebx-my_target]')
+================================================================================

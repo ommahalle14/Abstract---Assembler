@@ -1,0 +1,221 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_026.asm
+================================================================================
+Test Number   : 026
+Test Title    : Test 026: IDIV signed division across registers and memory
+Category      : VALID TEST CASE
+Overall Result: PASS (Valid Assembly Assembled & Linked Successfully)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 026: IDIV signed division across registers and memory
+section .text
+global _start
+_start:
+    ; 32-bit IDIV
+    cdq
+    idiv ecx
+    idiv ebx
+    idiv dword ptr [esi]
+    idiv dword ptr [ebp - 8]
+
+    ; 16-bit IDIV
+    cwd
+    idiv cx
+    idiv word ptr [ebx]
+
+    ; 8-bit IDIV
+    cbw
+    idiv bl
+    idiv byte ptr [edx]
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_026.asm" (21 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 21 source lines...
+[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 12
+Total Defined Labels: 1
+Dense Label Count   : 2 (extId=1)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 4)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   6:     cdq                        (operands=0, defLabel=0)
+  [1  ] Line 7  :     idiv ecx                   (operands=1)
+  [2  ] Line 8  :     idiv ebx                   (operands=1)
+  [3  ] Line 9  :     idiv dword ptr [esi]       (operands=1)
+  [4  ] Line 10 :     idiv dword ptr [ebp - 8]   (operands=1)
+  [5  ] Line 13 :     cwd                        (operands=0)
+  [6  ] Line 14 :     idiv cx                    (operands=1)
+  [7  ] Line 15 :     idiv word ptr [ebx]        (operands=1)
+  [8  ] Line 18 :     cbw                        (operands=0)
+  [9  ] Line 19 :     idiv bl                    (operands=1)
+  [10 ] Line 20 :     idiv byte ptr [edx]        (operands=1)
+  [11 ] Line 21 :     ret                        (operands=0)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_026.asm" (21 lines). Target: "temp_out\test_026.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 21 source lines...
+[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 13 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 26 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 26 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  99                        cdq
+00000001  F7 F9                     idiv ecx
+00000003  F7 FB                     idiv ebx
+00000005  F7 3E                     idiv dword ptr [esi]
+00000007  F7 7D F8                  idiv dword ptr [ebp - 8]
+0000000A  66 99                     cwd
+0000000C  66 F7 F9                  idiv cx
+0000000F  66 F7 3B                  idiv word ptr [ebx]
+00000012  66 98                     cbw
+00000014  F6 FB                     idiv bl
+00000016  F6 3A                     idiv byte ptr [edx]
+00000018  C3                        ret
+Total Emitted Bytes: 25
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_026.bin (25 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 25 bytes to temp_out\test_026.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_026.asm" (21 lines). Target: "temp_out\test_026.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 21 source lines...
+[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 13 instructions (2 labels)...
+[Worklet 2: encodeImpl] Emitted 26 machine code bytes. Resolving 0 label fixup(s)...
+[Worklet 2: encode] Encoding completed successfully: 26 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  99                        cdq
+00000001  F7 F9                     idiv ecx
+00000003  F7 FB                     idiv ebx
+00000005  F7 3E                     idiv dword ptr [esi]
+00000007  F7 7D F8                  idiv dword ptr [ebp - 8]
+0000000A  66 99                     cwd
+0000000C  66 F7 F9                  idiv cx
+0000000F  66 F7 3B                  idiv word ptr [ebx]
+00000012  66 98                     cbw
+00000014  F6 FB                     idiv bl
+00000016  F6 3A                     idiv byte ptr [edx]
+00000018  C3                        ret
+Total Emitted Bytes: 25
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_026_pipe.bin (25 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 1 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 1 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[Worklet 1: buildSymbolTable] .symtab built with 3 symbol entries (48 bytes), .strtab 8 bytes; passed directly to Worklet 3.
+
+>>> Phase 5: ELF Relocation & Object Generation (Worklet 3: writeElf) <<<
+[Worklet 3: buildRelocs] No relocations to process.
+[Worklet 3: writeElf] Laying out ELF32 object file with 4 payload section(s) -> "temp_out\test_026.o"...
+[Worklet 3: writeElf] Wrote 372 bytes -> "temp_out\test_026.o" (6 sections including NULL+shstrtab).
+[Worklet 3: checkElf] Running self-check on "temp_out\test_026.o"...
+[Worklet 3: checkElf] Self-check passed: ELF32 relocatable object is well-formed.
+wrote temp_out\test_026.o (ELF32 relocatable): .text 25 bytes, .data 0 bytes, .bss 0 bytes, 0 relocation(s)
+
+[Worklet 3: dumpElf] Reading ELF structures from "temp_out\test_026.o"...
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              REL (Relocatable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          0 (bytes into file)
+  Start of section headers:          172 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           0 (bytes)
+  Number of program headers:         0
+  Size of section headers:           40 (bytes)
+  Number of section headers:         5
+  Section header string table index: 4
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00000000 000034 000019 00  AX  0   0 16
+  [ 2] .symtab           SYMTAB          00000000 000050 000030 10      3   2  4
+  [ 3] .strtab           STRTAB          00000000 000080 000008 00      0   0  1
+  [ 4] .shstrtab         STRTAB          00000000 000088 000021 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: SUCCESS
+- Verification Note: Valid Assembly Assembled & Linked Successfully
+================================================================================

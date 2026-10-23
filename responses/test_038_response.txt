@@ -1,0 +1,233 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_038.asm
+================================================================================
+Test Number   : 038
+Test Title    : Test 038: Flag conditional jumps (JS, JNS, JO, JNO, JP/JPE, JNP/JPO)
+Category      : VALID TEST CASE
+Overall Result: PASS (Valid Assembly Assembled & Linked Successfully)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 038: Flag conditional jumps (JS, JNS, JO, JNO, JP/JPE, JNP/JPO)
+section .text
+global _start
+_start:
+    test eax, eax
+    js lbl_sign
+    jns lbl_nosign
+
+    add eax, 1
+    jo lbl_overflow
+    jno lbl_nooverflow
+
+    test al, 0xFF
+    jp lbl_parity
+    jpe lbl_parity
+    jnp lbl_noparity
+    jpo lbl_noparity
+
+lbl_sign:
+lbl_nosign:
+lbl_overflow:
+lbl_nooverflow:
+lbl_parity:
+lbl_noparity:
+    ret
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_038.asm" (25 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 25 source lines...
+[Worklet 3: splitSource] Split complete: 19 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 25 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 7 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+======================================================================
+WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
+======================================================================
+Total Instructions  : 12
+Total Defined Labels: 7
+Dense Label Count   : 3 (extId=2)
+Symbol References   : 0
+Status              : SUCCESS (0 errors)
+
+Discovered Labels:
+  [0] Label '_start' at instruction index 0 (line 4)
+  [1] Label 'lbl_sign' at instruction index 11 (line 19)
+  [2] Label 'lbl_nosign' at instruction index 11 (line 20)
+  [3] Label 'lbl_overflow' at instruction index 11 (line 21)
+  [4] Label 'lbl_nooverflow' at instruction index 11 (line 22)
+  [5] Label 'lbl_parity' at instruction index 11 (line 23)
+  [6] Label 'lbl_noparity' at instruction index 11 (line 24)
+
+Parsed IR Instructions (w2::Instruction):
+  [  0] Line   5:     test eax, eax              (operands=2, defLabel=0)
+  [1  ] Line 6  :     js lbl_sign                (operands=1)
+  [2  ] Line 7  :     jns lbl_nosign             (operands=1)
+  [3  ] Line 9  :     add eax, 1                 (operands=2)
+  [4  ] Line 10 :     jo lbl_overflow            (operands=1)
+  [5  ] Line 11 :     jno lbl_nooverflow         (operands=1)
+  [6  ] Line 13 :     test al, 0xFF              (operands=2)
+  [7  ] Line 14 :     jp lbl_parity              (operands=1)
+  [8  ] Line 15 :     jpe lbl_parity             (operands=1)
+  [9  ] Line 16 :     jnp lbl_noparity           (operands=1)
+  [10 ] Line 17 :     jpo lbl_noparity           (operands=1)
+  [11 ] Line 25 :     ret                        (operands=0, defLabel=1)
+======================================================================
+
+[Assembler] Worklet 1 completed successfully (--w1 mode).
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_038.asm" (25 lines). Target: "temp_out\test_038.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 25 source lines...
+[Worklet 3: splitSource] Split complete: 19 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 25 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 7 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 13 instructions (3 labels)...
+[Worklet 2: encodeImpl] Emitted 57 machine code bytes. Resolving 8 label fixup(s)...
+[Worklet 2: encodeImpl] Backpatching complete: all label offsets resolved successfully.
+[Worklet 2: encode] Encoding completed successfully: 57 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  85 C0                     test eax, eax
+00000002  0F 88 2F 00 00 00         js lbl_sign
+00000008  0F 89 29 00 00 00         jns lbl_nosign
+0000000E  83 C0 01                  add eax, 1
+00000011  0F 80 20 00 00 00         jo lbl_overflow
+00000017  0F 81 1A 00 00 00         jno lbl_nooverflow
+0000001D  A8 FF                     test al, 0xFF
+0000001F  0F 8A 12 00 00 00         jp lbl_parity
+00000025  0F 8A 0C 00 00 00         jpe lbl_parity
+0000002B  0F 8B 06 00 00 00         jnp lbl_noparity
+00000031  0F 8B 00 00 00 00         jpo lbl_noparity
+00000037  C3                        ret
+Total Emitted Bytes: 56
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_038.bin (56 bytes)...
+[Assembler] Worklet 2 completed successfully: wrote 56 bytes to temp_out\test_038.bin (--w2 mode).
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 0
+[STDOUT]:
+[Main: main] Input: "tests\test_038.asm" (25 lines). Target: "temp_out\test_038.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 25 source lines...
+[Worklet 3: splitSource] Split complete: 19 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 25 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 7 label definitions across 12 instructions.
+[Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 12 IR instructions, recorded 0 symbol references (0 errors).
+
+>>> Phase 3: Machine Code Encoding (Worklet 2: encode) <<<
+[Worklet 2: encode] Starting single-pass encoding for 13 instructions (3 labels)...
+[Worklet 2: encodeImpl] Emitted 57 machine code bytes. Resolving 8 label fixup(s)...
+[Worklet 2: encodeImpl] Backpatching complete: all label offsets resolved successfully.
+[Worklet 2: encode] Encoding completed successfully: 57 machine code bytes generated.
+
+======================================================================
+WORKLET 2 OUTPUT: Machine Code Disassembly Listing (.bin)
+======================================================================
+00000000  85 C0                     test eax, eax
+00000002  0F 88 2F 00 00 00         js lbl_sign
+00000008  0F 89 29 00 00 00         jns lbl_nosign
+0000000E  83 C0 01                  add eax, 1
+00000011  0F 80 20 00 00 00         jo lbl_overflow
+00000017  0F 81 1A 00 00 00         jno lbl_nooverflow
+0000001D  A8 FF                     test al, 0xFF
+0000001F  0F 8A 12 00 00 00         jp lbl_parity
+00000025  0F 8A 0C 00 00 00         jpe lbl_parity
+0000002B  0F 8B 06 00 00 00         jnp lbl_noparity
+00000031  0F 8B 00 00 00 00         jpo lbl_noparity
+00000037  C3                        ret
+Total Emitted Bytes: 56
+======================================================================
+
+[Worklet 2: writeBinFile] Writing raw binary file: temp_out\test_038_pipe.bin (56 bytes)...
+
+>>> Phase 4: Symbol Table Generation (Worklet 1: buildSymbolTable) <<<
+[Worklet 1: buildSymbolTable] Resolving 7 text label address(es) using Worklet 2 instruction offsets...
+[Worklet 1: buildSymbolTable] Building .symtab for 7 label(s), 0 extern(s), 1 global(s), 0 equ constant(s)...
+[Worklet 1: buildSymbolTable] .symtab built with 9 symbol entries (144 bytes), .strtab 80 bytes; passed directly to Worklet 3.
+
+>>> Phase 5: ELF Relocation & Object Generation (Worklet 3: writeElf) <<<
+[Worklet 3: buildRelocs] No relocations to process.
+[Worklet 3: writeElf] Laying out ELF32 object file with 4 payload section(s) -> "temp_out\test_038.o"...
+[Worklet 3: writeElf] Wrote 568 bytes -> "temp_out\test_038.o" (6 sections including NULL+shstrtab).
+[Worklet 3: checkElf] Running self-check on "temp_out\test_038.o"...
+[Worklet 3: checkElf] Self-check passed: ELF32 relocatable object is well-formed.
+wrote temp_out\test_038.o (ELF32 relocatable): .text 56 bytes, .data 0 bytes, .bss 0 bytes, 0 relocation(s)
+
+[Worklet 3: dumpElf] Reading ELF structures from "temp_out\test_038.o"...
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              REL (Relocatable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          0 (bytes into file)
+  Start of section headers:          368 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           0 (bytes)
+  Number of program headers:         0
+  Size of section headers:           40 (bytes)
+  Number of section headers:         5
+  Section header string table index: 4
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00000000 000034 000038 00  AX  0   0 16
+  [ 2] .symtab           SYMTAB          00000000 00006c 000090 10      3   8  4
+  [ 3] .strtab           STRTAB          00000000 0000fc 000050 00      0   0  1
+  [ 4] .shstrtab         STRTAB          00000000 00014c 000021 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: SUCCESS
+- Worklet 2 Status: SUCCESS
+- Worklet 3 Status: SUCCESS
+- Verification Note: Valid Assembly Assembled & Linked Successfully
+================================================================================

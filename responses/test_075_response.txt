@@ -1,0 +1,68 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_075.asm
+================================================================================
+Test Number   : 075
+Test Title    : Test 075 [ERROR]: Division by zero in EQU expression
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Error at line 4: Division by zero at line 4, column 5)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 075 [ERROR]: Division by zero in EQU expression
+; Stage: Worklet 3 (splitSource)
+; Expected Error: division by zero
+DIV_ZERO equ 100 / 0
+
+section .text
+_start:
+    mov eax, DIV_ZERO
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_075.asm" (8 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Error at line 4: Division by zero at line 4, column 5
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_075.asm" (8 lines). Target: "temp_out\test_075.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Error at line 4: Division by zero at line 4, column 5
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_075.asm" (8 lines). Target: "temp_out\test_075.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Error at line 4: Division by zero at line 4, column 5
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Error at line 4: Division by zero at line 4, column 5
+================================================================================

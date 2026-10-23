@@ -1,0 +1,67 @@
+================================================================================
+TEST CODE RUN RESPONSE: test_063.asm
+================================================================================
+Test Number   : 063
+Test Title    : Test 063 [ERROR]: EQU definition conflicts with existing label in data
+Category      : ERROR TEST CASE
+Overall Result: PASS (Expected Error Caught: Error at line 7: symbol 'func_entry' already defined as a label)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE
+--------------------------------------------------------------------------------
+; Test 063 [ERROR]: EQU definition conflicts with existing label in data
+; Stage: Worklet 3 (splitSource)
+; Expected Error: symbol 'func_entry' already defined as a label
+section .data
+func_entry: db 1
+
+func_entry equ 42
+
+--------------------------------------------------------------------------------
+2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_063.asm" (7 lines). Target: ""
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[STDERR]:
+Error at line 7: symbol 'func_entry' already defined as a label
+
+--------------------------------------------------------------------------------
+3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_063.asm" (7 lines). Target: "temp_out\test_063.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[STDERR]:
+Error at line 7: symbol 'func_entry' already defined as a label
+
+--------------------------------------------------------------------------------
+4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_063.asm" (7 lines). Target: "temp_out\test_063.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[STDERR]:
+Error at line 7: symbol 'func_entry' already defined as a label
+
+--------------------------------------------------------------------------------
+5. WORKLET WORKFLOW SUMMARY
+--------------------------------------------------------------------------------
+- Worklet 1 Status: ERROR / STOPPED
+- Worklet 2 Status: ERROR / SKIPPED
+- Worklet 3 Status: ERROR / DETECTED
+- Verification Note: Expected Error Caught: Error at line 7: symbol 'func_entry' already defined as a label
+================================================================================
