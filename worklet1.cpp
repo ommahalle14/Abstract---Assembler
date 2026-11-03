@@ -1,10 +1,10 @@
-// =====================================================================
+// ---------------------------------------------------------------------
 //  Worklet 1 : Parser, Front-End, and Symbol Table Generator (x86-32)
 //  ---------------------------------------------------------------------
 //  Produces typed, parsed enum instructions (w2::Instruction) directly.
 //  Builds complete ELF symbol table taking addresses from Worklet 2,
 //  and directly passes it to Worklet 3.
-// =====================================================================
+// ---------------------------------------------------------------------
 #pragma once
 
 #include "worklet2.h"
@@ -22,6 +22,9 @@
 #include <cstdint>
 #include <cstdlib>
 #include <algorithm>
+#include <iomanip>
+
+using namespace std;
 
 // ---------------------------------------------------------------------
 // TOKEN AND ERROR DEFINITIONS
@@ -39,14 +42,14 @@ enum class TokenType {
 
 struct Token {
     TokenType   type;
-    std::string text;
+    string text;
     int         line;
     int         column;
 };
 
 struct AsmError {
-    std::string category;
-    std::string message;
+    string category;
+    string message;
     int         line;
     int         column;
 };
@@ -60,28 +63,28 @@ enum RefKind {
 struct SymRef {
     size_t      instr;
     int         opIdx;
-    std::string sym;
+    string sym;
     RefKind     kind;
     bool        external;
 };
 
 struct LabelEntry {
-    std::string name;
+    string name;
     size_t      instrIndex;
     int         line;
     int         column;
 };
 
 struct ParsedProgramIR {
-    std::vector<w2::Instruction> instructions;
-    std::vector<std::string>     instructionText;
-    std::vector<int>             instructionLines;
-    std::vector<SymRef>          refs;
-    std::vector<LabelEntry>      labels;
+    vector<w2::Instruction> instructions;
+    vector<string>     instructionText;
+    vector<int>             instructionLines;
+    vector<SymRef>          refs;
+    vector<LabelEntry>      labels;
     w2::LabelId                  endLabel = w2::NO_LABEL;
     uint32_t                     labelCount = 0;
     w2::LabelId                  extId = 0;
-    std::vector<AsmError>        errors;
+    vector<AsmError>        errors;
     bool                         ok = false;
 };
 
@@ -91,8 +94,8 @@ using Worklet1Output = ParsedProgramIR;
 // HELPERS
 // ---------------------------------------------------------------------
 
-inline void reportAsmError(std::vector<AsmError>& errors, const std::string& category,
-                           const std::string& message, int line, int column) {
+inline void reportAsmError(vector<AsmError>& errors, const string& category,
+                           const string& message, int line, int column) {
     AsmError e;
     e.category = category;
     e.message  = message;
@@ -101,19 +104,19 @@ inline void reportAsmError(std::vector<AsmError>& errors, const std::string& cat
     errors.push_back(e);
 }
 
-inline void addError(std::vector<AsmError>& errors, const std::string& category,
-                     const std::string& message, int line, int column) {
+inline void addError(vector<AsmError>& errors, const string& category,
+                     const string& message, int line, int column) {
     reportAsmError(errors, category, message, line, column);
 }
 
-inline std::string toUpperString(std::string s) {
+inline string toUpperString(string s) {
     for (size_t i = 0; i < s.size(); ++i) {
-        s[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(s[i])));
+        s[i] = static_cast<char>(toupper(static_cast<unsigned char>(s[i])));
     }
     return s;
 }
 
-inline std::string toUpper(std::string s) {
+inline string toUpper(string s) {
     return toUpperString(s);
 }
 
@@ -121,7 +124,7 @@ inline std::string toUpper(std::string s) {
 // ENUMERATION & LOOKUP LOGIC
 // ---------------------------------------------------------------------
 
-inline bool lookupRegister(const std::string& name, w2::Reg& r, uint8_t& bits) {
+inline bool lookupRegister(const string& name, w2::Reg& r, uint8_t& bits) {
     static const char* const n32[8] = {"EAX","ECX","EDX","EBX","ESP","EBP","ESI","EDI"};
     static const char* const n16[8] = {"AX","CX","DX","BX","SP","BP","SI","DI"};
     static const char* const n8 [8] = {"AL","CL","DL","BL","AH","CH","DH","BH"};
@@ -133,39 +136,39 @@ inline bool lookupRegister(const std::string& name, w2::Reg& r, uint8_t& bits) {
     return false;
 }
 
-inline bool lookupRegSized(const std::string& name, w2::Reg& r, uint8_t& bits) {
+inline bool lookupRegSized(const string& name, w2::Reg& r, uint8_t& bits) {
     return lookupRegister(name, r, bits);
 }
 
-inline bool isSegmentRegister(const std::string& r) {
+inline bool isSegmentRegister(const string& r) {
     return r == "CS" || r == "DS" || r == "SS" || r == "ES" || r == "FS" || r == "GS";
 }
 
-inline bool isSegmentReg(const std::string& r) {
+inline bool isSegmentReg(const string& r) {
     return isSegmentRegister(r);
 }
 
-inline bool isValidRegisterName(const std::string& upper) {
+inline bool isValidRegisterName(const string& upper) {
     w2::Reg r; uint8_t bits;
     return lookupRegister(upper, r, bits) || isSegmentRegister(upper);
 }
 
-inline bool isValidRegister(const std::string& upper) {
+inline bool isValidRegister(const string& upper) {
     return isValidRegisterName(upper);
 }
 
-inline int getRegisterBitWidth(const std::string& upper) {
+inline int getRegisterBitWidth(const string& upper) {
     w2::Reg r; uint8_t bits;
     if (lookupRegister(upper, r, bits)) return bits;
     if (isSegmentRegister(upper)) return 16;
     return 0;
 }
 
-inline int getRegisterSize(const std::string& upper) {
+inline int getRegisterSize(const string& upper) {
     return getRegisterBitWidth(upper);
 }
 
-inline int parseConditionCode(const std::string& s) {
+inline int parseConditionCode(const string& s) {
     static const char* const names[][4] = {
         /*0*/ {"O"},  
         /*1*/ {"NO"}, 
@@ -180,11 +183,11 @@ inline int parseConditionCode(const std::string& s) {
     return -1;
 }
 
-inline int condCode(const std::string& s) {
+inline int condCode(const string& s) {
     return parseConditionCode(s);
 }
 
-inline bool lookupBaseMnemonic(const std::string& m, w2::Op& op) {
+inline bool lookupBaseMnemonic(const string& m, w2::Op& op) {
     if (m == "MOV")  { op = w2::Op::MOV;  return true; }
     if (m == "ADD")  { op = w2::Op::ADD;  return true; }
     if (m == "SUB")  { op = w2::Op::SUB;  return true; }
@@ -240,11 +243,11 @@ inline bool lookupBaseMnemonic(const std::string& m, w2::Op& op) {
     return false;
 }
 
-inline bool lookupOp(const std::string& m, w2::Op& op) {
+inline bool lookupOp(const string& m, w2::Op& op) {
     return lookupBaseMnemonic(m, op);
 }
 
-inline bool lookupExtendedMnemonic(const std::string& m, w2::Op& op, uint8_t& cond, uint8_t& size) {
+inline bool lookupExtendedMnemonic(const string& m, w2::Op& op, uint8_t& cond, uint8_t& size) {
     static const w2::Op jcc[16] = { w2::Op::JO, w2::Op::JNO, w2::Op::JB, w2::Op::JAE,
         w2::Op::JE, w2::Op::JNE, w2::Op::JBE, w2::Op::JA, w2::Op::JS, w2::Op::JNS,
         w2::Op::JP, w2::Op::JNP, w2::Op::JL, w2::Op::JGE, w2::Op::JLE, w2::Op::JG };
@@ -289,18 +292,18 @@ inline bool lookupExtendedMnemonic(const std::string& m, w2::Op& op, uint8_t& co
     return false;
 }
 
-inline bool lookupOpEx(const std::string& m, w2::Op& op, uint8_t& cond, uint8_t& size) {
+inline bool lookupOpEx(const string& m, w2::Op& op, uint8_t& cond, uint8_t& size) {
     return lookupExtendedMnemonic(m, op, cond, size);
 }
 
-inline bool isValidMnemonicName(const std::string& upper) {
+inline bool isValidMnemonicName(const string& upper) {
     if (upper == "LOAD" || upper == "STORE" || upper == "PUSHA" || upper == "POPA" ||
         upper == "PUSHF" || upper == "POPF" || upper == "LODS" || upper == "STOS") return true;
     w2::Op op; uint8_t cond = 0, sz = 0;
     return lookupBaseMnemonic(upper, op) || lookupExtendedMnemonic(upper, op, cond, sz);
 }
 
-inline bool isValidMnemonic(const std::string& upper) {
+inline bool isValidMnemonic(const string& upper) {
     return isValidMnemonicName(upper);
 }
 
@@ -343,10 +346,10 @@ inline bool labelImmediateOk(w2::Op op) {
     return isImmediateLabelAllowed(op);
 }
 
-inline bool validateMemoryExpressionSyntax(const std::string& raw, std::string& why) {
+inline bool validateMemoryExpressionSyntax(const string& raw, string& why) {
     const size_t lb = raw.find('['), rb = raw.rfind(']');
-    if (lb == std::string::npos || rb == std::string::npos || rb < lb) return false;
-    std::string s;
+    if (lb == string::npos || rb == string::npos || rb < lb) return false;
+    string s;
     for (size_t k = lb + 1; k < rb; ++k) if (!isspace(static_cast<unsigned char>(raw[k]))) s += raw[k];
 
     int regs = 0, scaled = 0, labels = 0;
@@ -356,21 +359,21 @@ inline bool validateMemoryExpressionSyntax(const std::string& raw, std::string& 
     while (i <= s.size()) {
         size_t j = i;
         while (j < s.size() && s[j] != '+' && s[j] != '-') ++j;
-        const std::string term = s.substr(i, j - i);
+        const string term = s.substr(i, j - i);
         if (!term.empty()) {
             const size_t star = term.find('*');
-            const std::string name = toUpperString(star == std::string::npos ? term : term.substr(0, star));
-            const std::string rhs  = (star == std::string::npos) ? std::string() : toUpperString(term.substr(star + 1));
+            const string name = toUpperString(star == string::npos ? term : term.substr(0, star));
+            const string rhs  = (star == string::npos) ? string() : toUpperString(term.substr(star + 1));
             w2::Reg r; uint8_t b;
             const bool isReg = lookupRegister(name, r, b) || isSegmentRegister(name);
             const bool rhsReg = !rhs.empty() && (lookupRegister(rhs, r, b) || isSegmentRegister(rhs));
-            if (star != std::string::npos && (isReg || rhsReg)) {
+            if (star != string::npos && (isReg || rhsReg)) {
                 ++regs; ++scaled;
                 if (sign == '-') { why = "a scaled index register cannot be subtracted"; return true; }
             } else if (isReg) {
                 ++regs;
                 if (sign == '-') { why = "a register cannot be subtracted in a memory operand"; return true; }
-            } else if (star == std::string::npos && (isalpha(static_cast<unsigned char>(term[0])) || term[0] == '_')) {
+            } else if (star == string::npos && (isalpha(static_cast<unsigned char>(term[0])) || term[0] == '_')) {
                 ++labels;
                 if (sign == '-') { why = "a label cannot be subtracted in a memory operand"; return true; }
             }
@@ -385,7 +388,7 @@ inline bool validateMemoryExpressionSyntax(const std::string& raw, std::string& 
     return false;
 }
 
-inline bool memExprProblem(const std::string& raw, std::string& why) {
+inline bool memExprProblem(const string& raw, string& why) {
     return validateMemoryExpressionSyntax(raw, why);
 }
 
@@ -393,7 +396,7 @@ inline bool memExprProblem(const std::string& raw, std::string& why) {
 // NUMERIC & EXPRESSION PARSERS
 // ---------------------------------------------------------------------
 
-inline bool parseNumericLiteral(const std::string& text, long long& value) {
+inline bool parseNumericLiteral(const string& text, long long& value) {
     size_t i = 0;
     bool negative = false;
     if (i < text.size() && (text[i] == '-' || text[i] == '+')) {
@@ -437,21 +440,21 @@ inline bool parseNumericLiteral(const std::string& text, long long& value) {
     return true;
 }
 
-inline bool parseNumber(const std::string& text, long long& value) {
+inline bool parseNumber(const string& text, long long& value) {
     return parseNumericLiteral(text, value);
 }
 
-inline bool parseMemoryExpressionComponents(const std::string& inside,
-                                           std::string& baseReg, std::string& indexReg, int& scale,
-                                           long long& displacement, std::string& symbol) {
-    std::string str;
+inline bool parseMemoryExpressionComponents(const string& inside,
+                                           string& baseReg, string& indexReg, int& scale,
+                                           long long& displacement, string& symbol) {
+    string str;
     for (size_t k = 0; k < inside.size(); k++) {
         if (!isspace(static_cast<unsigned char>(inside[k]))) str += inside[k];
     }
     if (str.empty()) return false;
 
-    std::vector<std::string> terms;
-    std::vector<char> ops;
+    vector<string> terms;
+    vector<char> ops;
     size_t i = 0;
     if (str[0] == '+' || str[0] == '-') {
         ops.push_back(str[0]);
@@ -482,15 +485,15 @@ inline bool parseMemoryExpressionComponents(const std::string& inside,
     symbol = "";
 
     for (size_t t = 0; t < terms.size(); t++) {
-        std::string term = terms[t];
+        string term = terms[t];
         char sign = ops[t];
         long long mult = (sign == '-') ? -1 : 1;
 
         size_t starPos = term.find('*');
-        if (starPos != std::string::npos) {
-            std::string p1 = term.substr(0, starPos);
-            std::string p2 = term.substr(starPos + 1);
-            std::string rPart, sPart;
+        if (starPos != string::npos) {
+            string p1 = term.substr(0, starPos);
+            string p2 = term.substr(starPos + 1);
+            string rPart, sPart;
             if (isValidRegisterName(toUpperString(p1))) {
                 rPart = toUpperString(p1);
                 sPart = p2;
@@ -509,7 +512,7 @@ inline bool parseMemoryExpressionComponents(const std::string& inside,
             continue;
         }
 
-        std::string upperTerm = toUpperString(term);
+        string upperTerm = toUpperString(term);
         if (isValidRegisterName(upperTerm)) {
             if (baseReg.empty()) {
                 baseReg = upperTerm;
@@ -538,9 +541,9 @@ inline bool parseMemoryExpressionComponents(const std::string& inside,
     return true;
 }
 
-inline bool parseMemoryExpression(const std::string& inside,
-                                  std::string& baseReg, std::string& indexReg, int& scale,
-                                  long long& displacement, std::string& symbol) {
+inline bool parseMemoryExpression(const string& inside,
+                                  string& baseReg, string& indexReg, int& scale,
+                                  long long& displacement, string& symbol) {
     return parseMemoryExpressionComponents(inside, baseReg, indexReg, scale, displacement, symbol);
 }
 
@@ -548,8 +551,8 @@ inline bool parseMemoryExpression(const std::string& inside,
 // LEXER
 // ---------------------------------------------------------------------
 
-inline std::vector<Token> tokenizeSourceLine(const std::string& line, int lineNumber, std::vector<AsmError>& errors) {
-    std::vector<Token> tokens;
+inline vector<Token> tokenizeSourceLine(const string& line, int lineNumber, vector<AsmError>& errors) {
+    vector<Token> tokens;
     size_t i = 0;
 
     while (i < line.size()) {
@@ -572,7 +575,7 @@ inline std::vector<Token> tokenizeSourceLine(const std::string& line, int lineNu
             while (i < line.size() && line[i] != ']' && line[i] != ';') i++;
             if (i < line.size() && line[i] == ']') {
                 i++;
-                std::string memText = line.substr(start, i - start);
+                string memText = line.substr(start, i - start);
                 tokens.push_back({TokenType::MEMORY, memText, lineNumber, bracketColumn});
             } else {
                 reportAsmError(errors, "Lexical Error", "missing closing ']' for memory operand",
@@ -586,7 +589,7 @@ inline std::vector<Token> tokenizeSourceLine(const std::string& line, int lineNu
             size_t start = i;
             i++;
             while (i < line.size() && (isalnum(static_cast<unsigned char>(line[i])) || line[i] == '_')) i++;
-            std::string text = line.substr(start, i - start);
+            string text = line.substr(start, i - start);
 
             long long ignored;
             if (parseNumericLiteral(text, ignored)) {
@@ -601,8 +604,8 @@ inline std::vector<Token> tokenizeSourceLine(const std::string& line, int lineNu
         if (isalpha(static_cast<unsigned char>(c)) || c == '_') {
             size_t start = i;
             while (i < line.size() && (isalnum(static_cast<unsigned char>(line[i])) || line[i] == '_')) i++;
-            std::string word  = line.substr(start, i - start);
-            std::string upper = toUpperString(word);
+            string word  = line.substr(start, i - start);
+            string upper = toUpperString(word);
 
             bool followedByColon = (i < line.size() && line[i] == ':');
 
@@ -624,14 +627,14 @@ inline std::vector<Token> tokenizeSourceLine(const std::string& line, int lineNu
             continue;
         }
 
-        reportAsmError(errors, "Lexical Error", std::string("invalid character '") + c + "'",
+        reportAsmError(errors, "Lexical Error", string("invalid character '") + c + "'",
                        lineNumber, column);
         i++;
     }
     return tokens;
 }
 
-inline std::vector<Token> tokenizeLine(const std::string& line, int lineNumber, std::vector<AsmError>& errors) {
+inline vector<Token> tokenizeLine(const string& line, int lineNumber, vector<AsmError>& errors) {
     return tokenizeSourceLine(line, lineNumber, errors);
 }
 
@@ -639,7 +642,7 @@ inline std::vector<Token> tokenizeLine(const std::string& line, int lineNumber, 
 // WORKLET 1 MAIN ENTRY POINT (PARSER & FRONT-END)
 // ---------------------------------------------------------------------
 
-inline void sortErrorsBySourcePosition(std::vector<AsmError>& e) {
+inline void sortErrorsBySourcePosition(vector<AsmError>& e) {
     for (size_t i = 1; i < e.size(); i++) {
         AsmError key = e[i];
         size_t j = i;
@@ -652,31 +655,31 @@ inline void sortErrorsBySourcePosition(std::vector<AsmError>& e) {
     }
 }
 
-inline void sortErrorsByPosition(std::vector<AsmError>& e) {
+inline void sortErrorsByPosition(vector<AsmError>& e) {
     sortErrorsBySourcePosition(e);
 }
 
-inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourceLines,
-                                          const std::set<std::string>* externSet = nullptr) {
-    std::cout << "[Worklet 1: parseAssemblySource] Tokenizing and analyzing " << sourceLines.size() << " assembly source lines...\n";
+inline ParsedProgramIR parseAssemblySource(const vector<string>& sourceLines,
+                                          const set<string>* externSet = nullptr) {
+    cout << "[Worklet 1: parseAssemblySource] Tokenizing and analyzing " << sourceLines.size() << " assembly source lines...\n";
 
     ParsedProgramIR out;
-    std::set<std::string> externs;
+    set<string> externs;
     if (externSet != nullptr) {
         externs = *externSet;
     }
 
     struct LineTokens {
         int lineNum;
-        std::string rawLine;
-        std::vector<Token> tokens;
+        string rawLine;
+        vector<Token> tokens;
     };
-    std::vector<LineTokens> lines;
+    vector<LineTokens> lines;
     lines.reserve(sourceLines.size());
 
     for (size_t i = 0; i < sourceLines.size(); ++i) {
         size_t errsBefore = out.errors.size();
-        std::vector<Token> toks = tokenizeSourceLine(sourceLines[i], static_cast<int>(i + 1), out.errors);
+        vector<Token> toks = tokenizeSourceLine(sourceLines[i], static_cast<int>(i + 1), out.errors);
         if (out.errors.size() != errsBefore) continue;
         lines.push_back({ static_cast<int>(i + 1), sourceLines[i], toks });
     }
@@ -684,12 +687,12 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
     struct ParsedInstrLine {
         size_t instrIndex;
         int lineNum;
-        std::string rawText;
-        std::vector<Token> tokens;
+        string rawText;
+        vector<Token> tokens;
     };
-    std::vector<ParsedInstrLine> instrLines;
-    std::unordered_map<std::string, int> definedLabelLine;
-    std::vector<LabelEntry> labelDefs;
+    vector<ParsedInstrLine> instrLines;
+    unordered_map<string, int> definedLabelLine;
+    vector<LabelEntry> labelDefs;
 
     for (size_t l = 0; l < lines.size(); ++l) {
         const auto& lt = lines[l];
@@ -697,13 +700,13 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
 
         size_t idx = 0;
         while (idx < lt.tokens.size() && lt.tokens[idx].type == TokenType::LABEL) {
-            const std::string& name = lt.tokens[idx].text;
+            const string& name = lt.tokens[idx].text;
             int line = lt.tokens[idx].line;
             int col  = lt.tokens[idx].column;
             if (definedLabelLine.count(name)) {
                 reportAsmError(out.errors, "Symbol Error",
                                "duplicate symbol '" + name + "' (first defined at line " +
-                               std::to_string(definedLabelLine[name]) + ")", line, col);
+                               to_string(definedLabelLine[name]) + ")", line, col);
             } else {
                 definedLabelLine[name] = line;
                 LabelEntry le;
@@ -726,11 +729,11 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
         }
     }
 
-    std::cout << "[Worklet 1: parseAssemblySource] Discovered " << labelDefs.size() << " label definitions across "
+    cout << "[Worklet 1: parseAssemblySource] Discovered " << labelDefs.size() << " label definitions across "
               << instrLines.size() << " instructions.\n";
 
     // Dense label ID assignment
-    std::map<size_t, w2::LabelId> idByInstr;
+    map<size_t, w2::LabelId> idByInstr;
     for (size_t k = 0; k < labelDefs.size(); ++k) {
         idByInstr[labelDefs[k].instrIndex] = 0;
     }
@@ -738,7 +741,7 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
     for (auto& kv : idByInstr) {
         kv.second = nextId++;
     }
-    std::unordered_map<std::string, w2::LabelId> idByName;
+    unordered_map<string, w2::LabelId> idByName;
     for (size_t k = 0; k < labelDefs.size(); ++k) {
         idByName[labelDefs[k].name] = idByInstr[labelDefs[k].instrIndex];
     }
@@ -749,7 +752,7 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
         out.endLabel = idByInstr[instrLines.size()];
     }
 
-    std::cout << "[Worklet 1: parseAssemblySource] Assigned " << out.labelCount << " dense label IDs (extId=" << out.extId << ").\n";
+    cout << "[Worklet 1: parseAssemblySource] Assigned " << out.labelCount << " dense label IDs (extId=" << out.extId << ").\n";
 
     // Parse each instruction directly into w2::Instruction
     out.instructions.reserve(instrLines.size());
@@ -773,7 +776,7 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
             continue;
         }
 
-        std::string m = toUpperString(toks[0].text);
+        string m = toUpperString(toks[0].text);
         w2::Op curOp = w2::Op::NOP;
         bool isLoad = (m == "LOAD");
         bool isStore = (m == "STORE");
@@ -805,13 +808,13 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
         // Parse operands
         struct RawParsedOp {
             TokenType type;
-            std::string text;
+            string text;
             int col;
             int explicitSize;
             w2::Operand op;
             bool ok;
         };
-        std::vector<RawParsedOp> parsedOps;
+        vector<RawParsedOp> parsedOps;
 
         size_t tIdx = 1;
         while (tIdx < toks.size()) {
@@ -822,7 +825,7 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
                                (m == "LEA" && parsedOps.size() == 1);
 
             if (toks[tIdx].type == TokenType::IDENTIFIER) {
-                std::string u = toUpperString(toks[tIdx].text);
+                string u = toUpperString(toks[tIdx].text);
                 if (u == "BYTE" || u == "WORD" || u == "DWORD" || u == "QWORD") {
                     if (u == "BYTE") explicitSize = 8;
                     else if (u == "WORD") explicitSize = 16;
@@ -875,7 +878,7 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
                 rpo.op = w2::immOp(static_cast<int32_t>(static_cast<uint32_t>(numVal)));
                 rpo.ok = true;
             } else if (curr.type == TokenType::IDENTIFIER) {
-                const std::string sym = curr.text;
+                const string sym = curr.text;
                 w2::LabelId lId = 0;
                 bool isExt = false;
                 if (idByName.count(sym)) {
@@ -914,12 +917,12 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
                     reportAsmError(out.errors, "Syntax Error", "a label cannot be used as an operand of " + m, line, startCol);
                 }
             } else if (curr.type == TokenType::MEMORY) {
-                std::string why;
+                string why;
                 if (validateMemoryExpressionSyntax(curr.text, why)) {
                     reportAsmError(out.errors, "Syntax Error", why + " ('" + curr.text + "')", line, startCol);
                 } else {
-                    std::string memInside = (curr.text.size() >= 2) ? curr.text.substr(1, curr.text.size() - 2) : "";
-                    std::string baseReg, indexReg, symbol;
+                    string memInside = (curr.text.size() >= 2) ? curr.text.substr(1, curr.text.size() - 2) : "";
+                    string baseReg, indexReg, symbol;
                     int scale = 1;
                     long long displacement = 0;
                     if (!parseMemoryExpressionComponents(memInside, baseReg, indexReg, scale, displacement, symbol)) {
@@ -1055,15 +1058,15 @@ inline ParsedProgramIR parseAssemblySource(const std::vector<std::string>& sourc
     out.labels = labelDefs;
     out.ok = out.errors.empty();
 
-    std::cout << "[Worklet 1: parseAssemblySource] Parsing complete: generated " << out.instructions.size()
+    cout << "[Worklet 1: parseAssemblySource] Parsing complete: generated " << out.instructions.size()
               << " IR instructions, recorded " << out.refs.size() << " symbol references ("
               << out.errors.size() << " errors).\n";
 
     return out;
 }
 
-inline ParsedProgramIR runWorklet1(const std::vector<std::string>& sourceLines,
-                                  const std::set<std::string>* externSet = nullptr) {
+inline ParsedProgramIR runWorklet1(const vector<string>& sourceLines,
+                                  const set<string>* externSet = nullptr) {
     return parseAssemblySource(sourceLines, externSet);
 }
 
@@ -1071,11 +1074,11 @@ inline ParsedProgramIR runWorklet1(const std::vector<std::string>& sourceLines,
 // FILE I/O
 // ---------------------------------------------------------------------
 
-inline bool readSourceFileLines(const std::string& path, std::vector<std::string>& lines) {
-    std::ifstream file(path.c_str());
+inline bool readSourceFileLines(const string& path, vector<string>& lines) {
+    ifstream file(path.c_str());
     if (!file) return false;
-    std::string line;
-    while (std::getline(file, line)) {
+    string line;
+    while (getline(file, line)) {
         if (lines.empty() && line.size() >= 3 &&
             static_cast<unsigned char>(line[0]) == 0xEF &&
             static_cast<unsigned char>(line[1]) == 0xBB &&
@@ -1087,27 +1090,27 @@ inline bool readSourceFileLines(const std::string& path, std::vector<std::string
     return true;
 }
 
-inline bool readSourceFile(const std::string& path, std::vector<std::string>& lines) {
+inline bool readSourceFile(const string& path, vector<string>& lines) {
     return readSourceFileLines(path, lines);
 }
 
-// =============================================================================
+// -----------------------------------------------------------------------------
 // WORKLET 1: Symbol Table Generation
 // Takes label definitions from Worklet 1, exact byte addresses from Worklet 2
 // (instrOffsets), and symbols from Worklet 3 (srcSyms), generates the complete
 // ELF Symbol Table (.symtab & .strtab), and passes it directly to Worklet 3.
-// =============================================================================
+// -----------------------------------------------------------------------------
 
-inline void symWriteU8(std::vector<uint8_t>& buf, uint8_t val) {
+inline void symWriteU8(vector<uint8_t>& buf, uint8_t val) {
     buf.push_back(val);
 }
 
-inline void symWriteU16(std::vector<uint8_t>& buf, uint16_t val) {
+inline void symWriteU16(vector<uint8_t>& buf, uint16_t val) {
     buf.push_back(static_cast<uint8_t>(val & 0xFF));
     buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));
 }
 
-inline void symWriteU32(std::vector<uint8_t>& buf, uint32_t val) {
+inline void symWriteU32(vector<uint8_t>& buf, uint32_t val) {
     buf.push_back(static_cast<uint8_t>(val & 0xFF));
     buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));
     buf.push_back(static_cast<uint8_t>((val >> 16) & 0xFF));
@@ -1116,10 +1119,10 @@ inline void symWriteU32(std::vector<uint8_t>& buf, uint32_t val) {
 
 inline bool buildSymbolTable(w3::ObjectModel& model,
                             const ParsedProgramIR& w1,
-                            const std::vector<size_t>& instrOffsets,
+                            const vector<size_t>& instrOffsets,
                             w3::SourceSymbols& srcSyms,
-                            std::string& errorMsg) {
-    std::cout << "[Worklet 1: buildSymbolTable] Resolving " << w1.labels.size()
+                            string& errorMsg) {
+    cout << "[Worklet 1: buildSymbolTable] Resolving " << w1.labels.size()
               << " text label address(es) using Worklet 2 instruction offsets...\n";
 
     // Step 1: Assign exact text offsets from Worklet 2 to all W1 label definitions
@@ -1133,22 +1136,22 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
                       !srcSyms.externs.empty() || !srcSyms.equConstants.empty() ||
                       !model.relocs.empty();
     if (!hasSymbols) {
-        std::cout << "[Worklet 1: buildSymbolTable] No user symbols found; skipping .symtab/.strtab generation.\n";
+        cout << "[Worklet 1: buildSymbolTable] No user symbols found; skipping .symtab/.strtab generation.\n";
         return true;
     }
 
-    std::cout << "[Worklet 1: buildSymbolTable] Building .symtab for "
+    cout << "[Worklet 1: buildSymbolTable] Building .symtab for "
               << srcSyms.labels.size() << " label(s), "
               << srcSyms.externs.size() << " extern(s), "
               << srcSyms.globals.size() << " global(s), "
               << srcSyms.equConstants.size() << " equ constant(s)...\n";
 
     // Validate that all declared globals are actually defined
-    for (const std::string& g : srcSyms.globals) {
+    for (const string& g : srcSyms.globals) {
         if (srcSyms.labels.count(g) == 0 && srcSyms.equConstants.count(g) == 0) {
             int line = srcSyms.globalLines.count(g) ? srcSyms.globalLines.at(g) : 0;
             if (line > 0) {
-                errorMsg = "Symbol Error at line " + std::to_string(line) + ": Global symbol '" + g + "' is declared but not defined";
+                errorMsg = "Symbol Error at line " + to_string(line) + ": Global symbol '" + g + "' is declared but not defined";
             } else {
                 errorMsg = "Global symbol '" + g + "' is declared but not defined";
             }
@@ -1157,28 +1160,28 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
     }
 
     // 1. Separate symbols into LOCAL and GLOBAL/EXTERN groups
-    std::set<std::string> globalSet(srcSyms.globals.begin(), srcSyms.globals.end());
+    set<string> globalSet(srcSyms.globals.begin(), srcSyms.globals.end());
     // _start is implicitly global if present
     if (srcSyms.labels.count("_start")) {
         globalSet.insert("_start");
     }
 
-    std::vector<w3::Sym> localSyms;
-    std::vector<w3::Sym> nonLocalSyms;
+    vector<w3::Sym> localSyms;
+    vector<w3::Sym> nonLocalSyms;
 
     // Normal labels defined in sections
-    std::vector<std::string> sortedLabels;
+    vector<string> sortedLabels;
     for (const auto& kv : srcSyms.labels) {
         sortedLabels.push_back(kv.first);
     }
-    std::sort(sortedLabels.begin(), sortedLabels.end());
+    sort(sortedLabels.begin(), sortedLabels.end());
 
-    for (const std::string& name : sortedLabels) {
+    for (const string& name : sortedLabels) {
         const auto& info = srcSyms.labels.at(name);
         w3::Sym s = w3::Sym();
         s.name  = name;
         s.value = info.offset;
-        std::string secName = (info.section == w3::SEC_TEXT) ? ".text" : (info.section == w3::SEC_DATA) ? ".data" : ".bss";
+        string secName = (info.section == w3::SEC_TEXT) ? ".text" : (info.section == w3::SEC_DATA) ? ".data" : ".bss";
         int sIdx = w3::sectionIndex(model, secName);
         s.shndx = (sIdx >= 0) ? static_cast<uint16_t>(sIdx) : w3::SHN_UNDEF;
         s.size  = 0;
@@ -1195,13 +1198,13 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
     }
 
     // equ constants (SHN_ABS)
-    std::vector<std::string> sortedEqus;
+    vector<string> sortedEqus;
     for (const auto& kv : srcSyms.equConstants) {
         sortedEqus.push_back(kv.first);
     }
-    std::sort(sortedEqus.begin(), sortedEqus.end());
+    sort(sortedEqus.begin(), sortedEqus.end());
 
-    for (const std::string& name : sortedEqus) {
+    for (const string& name : sortedEqus) {
         w3::Sym s = w3::Sym();
         s.name  = name;
         s.value = srcSyms.equConstants.at(name);
@@ -1219,9 +1222,9 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
     }
 
     // extern symbols (SHN_UNDEF, STB_GLOBAL)
-    std::vector<std::string> sortedExterns = srcSyms.externs;
-    std::sort(sortedExterns.begin(), sortedExterns.end());
-    for (const std::string& name : sortedExterns) {
+    vector<string> sortedExterns = srcSyms.externs;
+    sort(sortedExterns.begin(), sortedExterns.end());
+    for (const string& name : sortedExterns) {
         w3::Sym s = w3::Sym();
         s.name  = name;
         s.value = 0;
@@ -1265,7 +1268,7 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
 
     strtab.data.push_back(0);
 
-    std::vector<uint32_t> stNameOffsets(model.symbols.size(), 0);
+    vector<uint32_t> stNameOffsets(model.symbols.size(), 0);
     for (size_t i = 1; i < model.symbols.size(); ++i) {
         const w3::Sym& sym = model.symbols[i];
         if (sym.type == w3::STT_SECTION) {
@@ -1302,7 +1305,7 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
     model.sections.push_back(symtab);
     model.sections.push_back(strtab);
 
-    std::cout << "[Worklet 1: buildSymbolTable] .symtab built with "
+    cout << "[Worklet 1: buildSymbolTable] .symtab built with "
               << (symtab.data.size() / 16) << " symbol entries ("
               << symtab.data.size() << " bytes), .strtab "
               << strtab.data.size() << " bytes; passed directly to Worklet 3.\n";
@@ -1314,54 +1317,51 @@ inline bool buildSymbolTable(w3::ObjectModel& model,
 // WORKLET 1 OUTPUT DISPLAY HELPER
 // ---------------------------------------------------------------------
 inline void printParsedProgramIR(const ParsedProgramIR& ir) {
-    std::cout << "\n======================================================================\n";
-    std::cout << "WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols\n";
-    std::cout << "======================================================================\n";
-    std::cout << "Total Instructions  : " << ir.instructions.size() << "\n";
-    std::cout << "Total Defined Labels: " << ir.labels.size() << "\n";
-    std::cout << "Dense Label Count   : " << ir.labelCount << " (extId=" << ir.extId << ")\n";
-    std::cout << "Symbol References   : " << ir.refs.size() << "\n";
-    std::cout << "Status              : " << (ir.ok ? "SUCCESS (0 errors)" : "FAILED") << "\n\n";
+    cout << "WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols\n";
+    cout << "Total Instructions  : " << ir.instructions.size() << "\n";
+    cout << "Total Defined Labels: " << ir.labels.size() << "\n";
+    cout << "Dense Label Count   : " << ir.labelCount << " (extId=" << ir.extId << ")\n";
+    cout << "Symbol References   : " << ir.refs.size() << "\n";
+    cout << "Status              : " << (ir.ok ? "SUCCESS (0 errors)" : "FAILED") << "\n\n";
 
     if (!ir.labels.empty()) {
-        std::cout << "Discovered Labels:\n";
+        cout << "Discovered Labels:\n";
         for (size_t i = 0; i < ir.labels.size(); ++i) {
-            std::cout << "  [" << i << "] Label '" << ir.labels[i].name
+            cout << "  [" << i << "] Label '" << ir.labels[i].name
                       << "' at instruction index " << ir.labels[i].instrIndex
                       << " (line " << ir.labels[i].line << ")\n";
         }
-        std::cout << "\n";
+        cout << "\n";
     }
 
     if (!ir.instructions.empty()) {
-        std::cout << "Parsed IR Instructions (w2::Instruction):\n";
+        cout << "Parsed IR Instructions (w2::Instruction):\n";
         for (size_t i = 0; i < ir.instructions.size(); ++i) {
-            std::cout << "  [" << std::setw(3) << i << "] Line "
-                      << std::setw(3) << ir.instructionLines[i] << ": "
-                      << std::left << std::setw(30) << ir.instructionText[i]
+            cout << "  [" << setw(3) << i << "] Line "
+                      << setw(3) << ir.instructionLines[i] << ": "
+                      << left << setw(30) << ir.instructionText[i]
                       << " (operands=" << static_cast<int>(ir.instructions[i].operandCount);
             if (ir.instructions[i].defLabel != w2::NO_LABEL) {
-                std::cout << ", defLabel=" << ir.instructions[i].defLabel;
+                cout << ", defLabel=" << ir.instructions[i].defLabel;
             }
-            std::cout << ")\n";
+            cout << ")\n";
         }
-        std::cout << std::right;
+        cout << right;
     }
-    std::cout << "======================================================================\n\n";
 }
 
 #ifdef WORKLET1_STANDALONE
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cout << "Usage: " << argv[0] << " <file.asm>\n";
+        cout << "Usage: " << argv[0] << " <file.asm>\n";
         return 1;
     }
-    std::vector<std::string> lines;
+    vector<string> lines;
     if (!readSourceFileLines(argv[1], lines)) {
-        std::cerr << "Error: could not read file " << argv[1] << "\n";
+        cerr << "Error: could not read file " << argv[1] << "\n";
         return 1;
     }
-    std::cout << "=== Worklet 1 Standalone Runner ===\n";
+    cout << "--- Worklet 1 Standalone Runner ---\n";
     ParsedProgramIR ir = parseAssemblySource(lines);
     printParsedProgramIR(ir);
     return ir.ok ? 0 : 1;

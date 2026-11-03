@@ -32,10 +32,7 @@ Return Code: 0
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 3 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
 [Worklet 1: parseAssemblySource] Parsing complete: generated 3 IR instructions, recorded 2 symbol references (0 errors).
-
-======================================================================
 WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
-======================================================================
 Total Instructions  : 3
 Total Defined Labels: 1
 Dense Label Count   : 2 (extId=1)
@@ -49,8 +46,6 @@ Parsed IR Instructions (w2::Instruction):
   [  0] Line   9:     mov dword ptr [stack_space], 0 (operands=2, defLabel=0)
   [1  ] Line 10 :     mov byte ptr [scratch_buf], 0 (operands=2)
   [2  ] Line 11 :     ret                        (operands=0)
-======================================================================
-
 [Assembler] Worklet 1 completed successfully (--w1 mode).
 
 --------------------------------------------------------------------------------

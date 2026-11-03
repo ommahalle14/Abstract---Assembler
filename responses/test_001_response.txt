@@ -45,10 +45,7 @@ Return Code: 0
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 15 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
 [Worklet 1: parseAssemblySource] Parsing complete: generated 15 IR instructions, recorded 0 symbol references (0 errors).
-
-======================================================================
 WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
-======================================================================
 Total Instructions  : 15
 Total Defined Labels: 1
 Dense Label Count   : 2 (extId=1)
@@ -74,8 +71,6 @@ Parsed IR Instructions (w2::Instruction):
   [12 ] Line 22 :     mov al, ah                 (operands=2)
   [13 ] Line 23 :     mov bl, ch                 (operands=2)
   [14 ] Line 24 :     ret                        (operands=0)
-======================================================================
-
 [Assembler] Worklet 1 completed successfully (--w1 mode).
 
 --------------------------------------------------------------------------------

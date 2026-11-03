@@ -38,10 +38,7 @@ Return Code: 0
 [Worklet 1: parseAssemblySource] Discovered 3 label definitions across 8 instructions.
 [Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
 [Worklet 1: parseAssemblySource] Parsing complete: generated 8 IR instructions, recorded 0 symbol references (0 errors).
-
-======================================================================
 WORKLET 1 OUTPUT: Parsed Program IR & Discovered Symbols
-======================================================================
 Total Instructions  : 8
 Total Defined Labels: 3
 Dense Label Count   : 4 (extId=3)
@@ -62,8 +59,6 @@ Parsed IR Instructions (w2::Instruction):
   [5  ] Line 11 :     jnz target_not_zero        (operands=1)
   [6  ] Line 14 :     nop                        (operands=0, defLabel=1)
   [7  ] Line 17 :     ret                        (operands=0, defLabel=2)
-======================================================================
-
 [Assembler] Worklet 1 completed successfully (--w1 mode).
 
 --------------------------------------------------------------------------------
