@@ -2,67 +2,98 @@
 TEST CODE RUN RESPONSE: test_064.asm
 ================================================================================
 Test Number   : 064
-Test Title    : Test 064 [ERROR]: Label conflicts with existing EQU constant
+Test Title    : Test 064 [ERROR]: Syntax error: unsupported / unknown mnemonic
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Error at line 7: label 'MAX_COUNT' conflicts with existing equ)
+Overall Result: PASS (Expected Error Caught: Syntax Error at line 3, column 5: unsupported mnemonic 'invalidop')
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 064 [ERROR]: Label conflicts with existing EQU constant
-; Stage: Worklet 3 (splitSource)
-; Expected Error: label 'MAX_COUNT' conflicts with existing equ
-MAX_COUNT equ 100
-
 section .text
-MAX_COUNT:
-    nop
+_start:
+    invalidop eax, ebx
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 1 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_064.asm" (8 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 8 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Error at line 7: label 'MAX_COUNT' conflicts with existing equ
-
---------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
---------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_064.asm" (8 lines). Target: "temp_out\test_064.bin"
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 8 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Error at line 7: label 'MAX_COUNT' conflicts with existing equ
+Subsystem: Worklet 1 Parser (parseAssemblySource)
+Failing Line: invalidop eax, ebx
+Root-Cause & Specification Explanation:
+During instruction parsing, the statement's initial token must be a recognized x86-32 mnemonic.
+Worklet 1 checks its internal opcode dispatch tables (lookupBaseMnemonic and lookupExtendedMnemonic).
+Because 'invalidop' is not present in the x86 ISA vocabulary, Worklet 1 emits:
+  "Syntax Error: unsupported mnemonic 'invalidop'"
+The parser terminates front-end IR generation without creating a w2::Instruction node.
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_064.asm" (8 lines). Target: "temp_out\test_064.o"
+[Main: main] Input: "tests\test_064.asm" (3 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 8 source lines...
+[Worklet 3: splitSource] Processing 3 source lines...
 [Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
 [STDERR]:
-Error at line 7: label 'MAX_COUNT' conflicts with existing equ
+Syntax Error at line 3, column 5: unsupported mnemonic 'invalidop'
+
+1 error(s) found. Pipeline stopped.
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_064.asm" (3 lines). Target: "temp_out\test_064.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 3, column 5: unsupported mnemonic 'invalidop'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_064.asm" (3 lines). Target: "temp_out\test_064.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 0 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 3, column 5: unsupported mnemonic 'invalidop'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Error at line 7: label 'MAX_COUNT' conflicts with existing equ
+- Verification Note: Expected Error Caught: Syntax Error at line 3, column 5: unsupported mnemonic 'invalidop'
 ================================================================================

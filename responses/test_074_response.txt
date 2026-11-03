@@ -2,68 +2,77 @@
 TEST CODE RUN RESPONSE: test_074.asm
 ================================================================================
 Test Number   : 074
-Test Title    : Test 074 [ERROR]: Value out of range for DW (-32768..65535)
+Test Title    : Test 074 [ERROR]: Directive error: duplicate label definition in .data section
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Error at line 5: value 100000 out of range for dw (-32768..65535))
+Overall Result: PASS (Expected Error Caught: Error at line 3: duplicate label 'my_data_var')
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 074 [ERROR]: Value out of range for DW (-32768..65535)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: value 100000 out of range for dw (-32768..65535)
 section .data
-overflow_word: dw 100000
+my_data_var: db 1
+my_data_var: db 2
 
 section .text
 _start:
     nop
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 3 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
+--------------------------------------------------------------------------------
+Subsystem: Worklet 3 Directive Evaluation (splitSource)
+Failing Line: my_data_var: db 2
+Root-Cause & Specification Explanation:
+The label 'my_data_var' was already defined on the previous line in the .data section.
+Worklet 3 tracks data-segment labels and detects the duplicate definition:
+  "Error: duplicate label 'my_data_var'"
+Labels within the same section must be unique.
+
+--------------------------------------------------------------------------------
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_074.asm" (9 lines). Target: ""
+[Main: main] Input: "tests\test_074.asm" (7 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
-Error at line 5: value 100000 out of range for dw (-32768..65535)
+Error at line 3: duplicate label 'my_data_var'
 
 --------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_074.asm" (9 lines). Target: "temp_out\test_074.bin"
+[Main: main] Input: "tests\test_074.asm" (7 lines). Target: "temp_out\test_074.bin"
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
-Error at line 5: value 100000 out of range for dw (-32768..65535)
+Error at line 3: duplicate label 'my_data_var'
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_074.asm" (9 lines). Target: "temp_out\test_074.o"
+[Main: main] Input: "tests\test_074.asm" (7 lines). Target: "temp_out\test_074.o"
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 7 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
-Error at line 5: value 100000 out of range for dw (-32768..65535)
+Error at line 3: duplicate label 'my_data_var'
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Error at line 5: value 100000 out of range for dw (-32768..65535)
+- Verification Note: Expected Error Caught: Error at line 3: duplicate label 'my_data_var'
 ================================================================================

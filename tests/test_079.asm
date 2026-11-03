@@ -1,6 +1,7 @@
-; Test 079 [ERROR]: Lexical error: label name is a reserved register keyword
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... label name 'eax' is a reserved word
+section .data
+out_of_range_word:
+    dw 100000
+
 section .text
-eax:
+_start:
     nop

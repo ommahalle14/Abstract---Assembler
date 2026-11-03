@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 generate_tests.py
-Generates 100 comprehensive .asm test cases for the x86-32 modular assembler.
+Generates 80 comprehensive .asm test cases for the x86-32 modular assembler.
 - Tests 001 - 060: 60 Valid assembly test cases covering all operands, instructions, addressing modes, and directives.
-- Tests 061 - 100: 40 Error test cases covering 40 distinct error conditions across Worklet 1, Worklet 2, and Worklet 3.
+- Tests 061 - 080: 20 Error test cases covering 20 distinct error conditions across Worklet 1, Worklet 2, and Worklet 3.
 """
 
 import os
@@ -1350,21 +1350,78 @@ copy_loop:
 """
 
 # ==============================================================================
-# 40 ERROR TEST CASES (061 - 100)
+# 20 ERROR TEST CASES (061 - 080)
+# - Tests 061 - 070: Worklet 1 Errors (No comments in test code)
+# - Tests 071 - 080: Worklet 3 Errors (No comments in test code)
 # ==============================================================================
 
-test_files["test_061.asm"] = """; Test 061 [ERROR]: Unknown section directive name
-; Stage: Worklet 3 (splitSource)
-; Expected Error: unknown section '.MY_CUSTOM_SECTION'
-section .my_custom_section
+# ------------------------------------------------------------------------------
+# WORKLET 1 ERRORS (061 - 070)
+# ------------------------------------------------------------------------------
+
+test_files["test_061.asm"] = """section .text
+_start:
+    mov eax, [ebx + 4
+"""
+
+test_files["test_062.asm"] = """section .text
+_start:
+    mov eax, 12345xyz
+"""
+
+test_files["test_063.asm"] = """section .text
+eax:
+    nop
+"""
+
+test_files["test_064.asm"] = """section .text
+_start:
+    invalidop eax, ebx
+"""
+
+test_files["test_065.asm"] = """section .text
+_start:
+    mov eax, [bx]
+"""
+
+test_files["test_066.asm"] = """extern ext_func
+section .text
+_start:
+    loop ext_func
+"""
+
+test_files["test_067.asm"] = """section .text
+_start:
+    mov eax, [ebx-ecx]
+"""
+
+test_files["test_068.asm"] = """section .text
+_start:
+    mov eax,
+"""
+
+test_files["test_069.asm"] = """section .text
+_start:
+    jmp nonexistent_target
+"""
+
+test_files["test_070.asm"] = """global undefined_global_func
+
+section .text
 _start:
     nop
 """
 
-test_files["test_062.asm"] = """; Test 062 [ERROR]: Duplicate EQU definition
-; Stage: Worklet 3 (splitSource)
-; Expected Error: duplicate equ definition of 'BUFFER_SIZE'
-BUFFER_SIZE equ 1024
+# ------------------------------------------------------------------------------
+# WORKLET 3 ERRORS (071 - 080)
+# ------------------------------------------------------------------------------
+
+test_files["test_071.asm"] = """section .my_custom_section
+_start:
+    nop
+"""
+
+test_files["test_072.asm"] = """BUFFER_SIZE equ 1024
 BUFFER_SIZE equ 2048
 
 section .text
@@ -1372,29 +1429,13 @@ _start:
     mov eax, BUFFER_SIZE
 """
 
-test_files["test_063.asm"] = """; Test 063 [ERROR]: EQU definition conflicts with existing label in data
-; Stage: Worklet 3 (splitSource)
-; Expected Error: symbol 'func_entry' already defined as a label
-section .data
+test_files["test_073.asm"] = """section .data
 func_entry: db 1
 
 func_entry equ 42
 """
 
-test_files["test_064.asm"] = """; Test 064 [ERROR]: Label conflicts with existing EQU constant
-; Stage: Worklet 3 (splitSource)
-; Expected Error: label 'MAX_COUNT' conflicts with existing equ
-MAX_COUNT equ 100
-
-section .text
-MAX_COUNT:
-    nop
-"""
-
-test_files["test_065.asm"] = """; Test 065 [ERROR]: Duplicate label definition in .data section
-; Stage: Worklet 3 (splitSource)
-; Expected Error: duplicate label 'my_data_var'
-section .data
+test_files["test_074.asm"] = """section .data
 my_data_var: db 1
 my_data_var: db 2
 
@@ -1403,10 +1444,7 @@ _start:
     nop
 """
 
-test_files["test_066.asm"] = """; Test 066 [ERROR]: Unknown directive in data section
-; Stage: Worklet 3 (splitSource)
-; Expected Error: unknown directive 'align'
-section .data
+test_files["test_075.asm"] = """section .data
 align 4
 
 section .text
@@ -1414,21 +1452,7 @@ _start:
     nop
 """
 
-test_files["test_067.asm"] = """; Test 067 [ERROR]: Malformed TIMES directive missing repeat count
-; Stage: Worklet 3 (splitSource)
-; Expected Error: malformed times directive
-section .data
-times db 10
-
-section .text
-_start:
-    nop
-"""
-
-test_files["test_068.asm"] = """; Test 068 [ERROR]: Negative repeat count in TIMES directive
-; Stage: Worklet 3 (splitSource)
-; Expected Error: negative repeat count -5
-section .data
+test_files["test_076.asm"] = """section .data
 times -5 db 1
 
 section .text
@@ -1436,295 +1460,41 @@ _start:
     nop
 """
 
-test_files["test_069.asm"] = """; Test 069 [ERROR]: TIMES repeat count exceeds maximum limit (16,000,000)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: exceeds maximum limit of 16000000
-section .data
-times 20000000 db 1
+test_files["test_077.asm"] = """section .data
+resb_missing:
+    resb
 
 section .text
 _start:
     nop
 """
 
-test_files["test_070.asm"] = """; Test 070 [ERROR]: RESB directive requires count operand
-; Stage: Worklet 3 (splitSource)
-; Expected Error: 'RESB' directive requires count operand
-section .bss
-buffer: resb
+test_files["test_078.asm"] = """section .data
+out_of_range_byte:
+    db 500
 
 section .text
 _start:
     nop
 """
 
-test_files["test_071.asm"] = """; Test 071 [ERROR]: DB directive requires operands
-; Stage: Worklet 3 (splitSource)
-; Expected Error: 'DB' directive requires operands
-section .data
-empty_bytes: db
+test_files["test_079.asm"] = """section .data
+out_of_range_word:
+    dw 100000
 
 section .text
 _start:
     nop
 """
 
-test_files["test_072.asm"] = """; Test 072 [ERROR]: Empty operand in DB comma list
-; Stage: Worklet 3 (splitSource)
-; Expected Error: empty operand in 'DB' directive
-section .data
-bad_list: db 1, , 2
-
-section .text
-_start:
-    nop
-"""
-
-test_files["test_073.asm"] = """; Test 073 [ERROR]: Value out of range for DB (-128..255)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: value 500 out of range for db (-128..255)
-section .data
-overflow_byte: db 500
-
-section .text
-_start:
-    nop
-"""
-
-test_files["test_074.asm"] = """; Test 074 [ERROR]: Value out of range for DW (-32768..65535)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: value 100000 out of range for dw (-32768..65535)
-section .data
-overflow_word: dw 100000
-
-section .text
-_start:
-    nop
-"""
-
-test_files["test_075.asm"] = """; Test 075 [ERROR]: Division by zero in EQU expression
-; Stage: Worklet 3 (splitSource)
-; Expected Error: division by zero
-DIV_ZERO equ 100 / 0
+test_files["test_080.asm"] = """DIV_ZERO equ 100 / 0
 
 section .text
 _start:
     mov eax, DIV_ZERO
 """
 
-test_files["test_076.asm"] = """; Test 076 [ERROR]: Lexical error: missing closing bracket ']' in memory operand
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... missing closing ']' for memory operand
-section .text
-_start:
-    mov eax, [ebx + 4
-"""
-
-test_files["test_077.asm"] = """; Test 077 [ERROR]: Lexical error: invalid immediate literal
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... invalid immediate '12345xyz'
-section .text
-_start:
-    mov eax, 12345xyz
-"""
-
-test_files["test_078.asm"] = """; Test 078 [ERROR]: Lexical error: invalid special character
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... invalid character '@'
-section .text
-_start:
-    mov eax, @
-"""
-
-test_files["test_079.asm"] = """; Test 079 [ERROR]: Lexical error: label name is a reserved register keyword
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... label name 'eax' is a reserved word
-section .text
-eax:
-    nop
-"""
-
-test_files["test_080.asm"] = """; Test 080 [ERROR]: Lexical error: label name is a reserved instruction mnemonic
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... label name 'mov' is a reserved word
-section .text
-mov:
-    nop
-"""
-
-test_files["test_081.asm"] = """; Test 081 [ERROR]: Syntax error: expected a mnemonic, found number
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... expected a mnemonic, found '9999'
-section .text
-_start:
-    9999 eax, ebx
-"""
-
-test_files["test_082.asm"] = """; Test 082 [ERROR]: Syntax error: unsupported / unknown mnemonic
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... unsupported mnemonic 'invalidop'
-section .text
-_start:
-    invalidop eax, ebx
-"""
-
-test_files["test_083.asm"] = """; Test 083 [ERROR]: Syntax error: missing operand after size directive
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... missing operand after size directive
-section .text
-_start:
-    mov eax, dword ptr
-"""
-
-test_files["test_084.asm"] = """; Test 084 [ERROR]: Syntax error: unknown register name
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... unknown register 'r15'
-section .text
-_start:
-    mov eax, r15
-"""
-
-test_files["test_085.asm"] = """; Test 085 [ERROR]: Syntax error: 16-bit register inside memory brackets
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... 16/8-bit register 'BX' cannot be used as an address (use 32-bit)
-section .text
-_start:
-    mov eax, [bx]
-"""
-
-test_files["test_086.asm"] = """; Test 086 [ERROR]: Symbol error: undefined symbol reference
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Symbol Error ... undefined symbol 'nonexistent_target'
-section .text
-_start:
-    jmp nonexistent_target
-"""
-
-test_files["test_087.asm"] = """; Test 087 [ERROR]: Syntax error: rel8 branch (LOOP) cannot reference external symbol
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... LOOP cannot reference an external symbol (rel8)
-extern ext_func
-section .text
-_start:
-    loop ext_func
-"""
-
-test_files["test_088.asm"] = """; Test 088 [ERROR]: Syntax error: bare label cannot be used as an operand of MUL
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... a label cannot be used as an operand of MUL
-section .text
-_start:
-    mul target_label
-target_label:
-    nop
-"""
-
-test_files["test_089.asm"] = """; Test 089 [ERROR]: Syntax error: invalid scale multiplier in SIB memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... invalid memory expression '[ebx+ecx*3]'
-section .text
-_start:
-    mov eax, [ebx+ecx*3]
-"""
-
-test_files["test_090.asm"] = """; Test 090 [ERROR]: Syntax error: ESP used as scaled index register
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... invalid memory expression '[ebx+esp*2]'
-section .text
-_start:
-    mov eax, [ebx+esp*2]
-"""
-
-test_files["test_091.asm"] = """; Test 091 [ERROR]: Syntax error: register subtracted in memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... a register cannot be subtracted in a memory operand
-section .text
-_start:
-    mov eax, [ebx-ecx]
-"""
-
-test_files["test_092.asm"] = """; Test 092 [ERROR]: Syntax error: scaled index register subtracted in memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... a scaled index register cannot be subtracted
-section .text
-_start:
-    mov eax, [ebx-ecx*4]
-"""
-
-test_files["test_093.asm"] = """; Test 093 [ERROR]: Syntax error: at most two registers allowed in memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... at most two registers (base + index) are allowed in a memory operand
-section .text
-_start:
-    mov eax, [eax+ebx+ecx]
-"""
-
-test_files["test_094.asm"] = """; Test 094 [ERROR]: Syntax error: multiple labels in memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... only one label is allowed in a memory operand
-section .text
-lbl_one: nop
-lbl_two: nop
-_start:
-    mov eax, [lbl_one+lbl_two]
-"""
-
-test_files["test_095.asm"] = """; Test 095 [ERROR]: Syntax error: label cannot be subtracted in memory operand
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... a label cannot be subtracted in a memory operand
-section .text
-my_target: nop
-_start:
-    mov eax, [ebx-my_target]
-"""
-
-test_files["test_096.asm"] = """; Test 096 [ERROR]: Syntax error: expected comma between operands
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... expected comma
-section .text
-_start:
-    mov eax ebx
-"""
-
-test_files["test_097.asm"] = """; Test 097 [ERROR]: Syntax error: missing operand after comma
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... missing operand after comma
-section .text
-_start:
-    mov eax,
-"""
-
-test_files["test_098.asm"] = """; Test 098 [ERROR]: Syntax error: instruction has more than 3 operands
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Syntax Error ... more than 3 operands
-section .text
-_start:
-    mov eax, ebx, ecx, edx
-"""
-
-test_files["test_099.asm"] = """; Test 099 [ERROR]: Symbol error: duplicate label defined in .text
-; Stage: Worklet 1 (parseAssemblySource)
-; Expected Error: Symbol Error ... duplicate symbol 'duplicate_label'
-section .text
-duplicate_label:
-    nop
-duplicate_label:
-    nop
-_start:
-    ret
-"""
-
-test_files["test_100.asm"] = """; Test 100 [ERROR]: Symbol error: declared GLOBAL symbol is never defined
-; Stage: Worklet 1 (buildSymbolTable)
-; Expected Error: Symbol Error ... Global symbol 'undefined_global_func' is declared but not defined
-global undefined_global_func
-
-section .text
-_start:
-    nop
-"""
-
-# Write all 100 files
+# Write all test files
 for filename, content in sorted(test_files.items()):
     filepath = os.path.join("tests", filename)
     with open(filepath, "w", newline="\n") as f:

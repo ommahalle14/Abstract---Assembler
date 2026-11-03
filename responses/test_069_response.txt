@@ -2,68 +2,98 @@
 TEST CODE RUN RESPONSE: test_069.asm
 ================================================================================
 Test Number   : 069
-Test Title    : Test 069 [ERROR]: TIMES repeat count exceeds maximum limit (16,000,000)
+Test Title    : Test 069 [ERROR]: Symbol error: undefined symbol reference
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Error at line 5: repeat count 20000000 exceeds maximum limit of 16000000)
+Overall Result: PASS (Expected Error Caught: Symbol Error at line 3, column 9: undefined symbol 'nonexistent_target')
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 069 [ERROR]: TIMES repeat count exceeds maximum limit (16,000,000)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: exceeds maximum limit of 16000000
-section .data
-times 20000000 db 1
-
 section .text
 _start:
-    nop
+    jmp nonexistent_target
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 1 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_069.asm" (9 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Error at line 5: repeat count 20000000 exceeds maximum limit of 16000000
-
---------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
---------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_069.asm" (9 lines). Target: "temp_out\test_069.bin"
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Error at line 5: repeat count 20000000 exceeds maximum limit of 16000000
+Subsystem: Worklet 1 Symbol Resolution (parseAssemblySource)
+Failing Line: jmp nonexistent_target
+Root-Cause & Specification Explanation:
+When resolving branch targets and memory labels, Worklet 1 queries the discovered label table
+(idByName) and the declared externs set. 'nonexistent_target' has neither been defined as a label
+in .text nor declared with an 'extern' directive. Worklet 1 emits:
+  "Symbol Error: undefined symbol 'nonexistent_target'"
+Unresolved symbols are caught at the front-end parser stage, preventing broken branch offsets.
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_069.asm" (9 lines). Target: "temp_out\test_069.o"
+[Main: main] Input: "tests\test_069.asm" (3 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
+[Worklet 3: splitSource] Processing 3 source lines...
 [Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
 [STDERR]:
-Error at line 5: repeat count 20000000 exceeds maximum limit of 16000000
+Symbol Error at line 3, column 9: undefined symbol 'nonexistent_target'
+
+1 error(s) found. Pipeline stopped.
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_069.asm" (3 lines). Target: "temp_out\test_069.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Symbol Error at line 3, column 9: undefined symbol 'nonexistent_target'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_069.asm" (3 lines). Target: "temp_out\test_069.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Symbol Error at line 3, column 9: undefined symbol 'nonexistent_target'
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Error at line 5: repeat count 20000000 exceeds maximum limit of 16000000
+- Verification Note: Expected Error Caught: Symbol Error at line 3, column 9: undefined symbol 'nonexistent_target'
 ================================================================================

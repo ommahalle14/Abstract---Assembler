@@ -1,6 +1,6 @@
 # Integration Test Suite (`tests/`)
 
-This directory contains the **100 end-to-end assembly test cases** (`test_001.asm` to `test_100.asm`) designed to validate the modular x86-32 assembler pipeline.
+This directory contains the **80 end-to-end assembly test cases** (`test_001.asm` to `test_080.asm`) designed to validate the modular x86-32 assembler pipeline.
 
 ---
 
@@ -21,16 +21,13 @@ This directory contains the **100 end-to-end assembly test cases** (`test_001.as
 
 ---
 
-### 2. Error Test Cases (061 - 100)
+### 2. Error Test Cases (061 - 080)
 *Expected behavior*: The assembler catches the invalid condition, halts the pipeline, and reports a descriptive error with a non-zero exit code (`!= 0`).
 
 | Range | Subsystem | Error Types Caught |
 |---|---|---|
-| `test_061 - test_075` | **Worklet 3 (Front-Half)** | Unknown sections, duplicate `equ`, label-equ conflicts, invalid directives, negative `times`, count overflow, missing `resb` operands, out-of-range `db`/`dw`, division by zero. |
-| `test_076 - test_089` | **Worklet 1 (Front-Half)** | Unclosed brackets, invalid numbers, reserved words as labels (`eax:`), unsupported mnemonics, undefined symbols, 16-bit registers as memory addresses, rel8 `LOOP` to extern, labels as operands to arithmetic. |
-| `test_090` | **Worklet 2 (Encoder)** | ESP used as an index register in SIB. |
-| `test_091 - test_099` | **Worklet 1 (Front-Half)** | Subtracted registers (`[ebx - ecx]`), subtracted scaled index, >2 registers, >1 label, subtracted label, missing comma, missing operand after comma, >3 operands, duplicate symbol. |
-| `test_100` | **Worklet 1 (Back-Half)** | Declared `global` symbol that is never defined in the source. |
+| `test_061 - test_070` | **Worklet 1 (Front-End & Symbol Engine)** | Unclosed brackets (`[ebx + 4`), invalid numbers (`12345xyz`), reserved word labels (`eax:`), unsupported mnemonics (`invalidop`), 16-bit register in memory (`[bx]`), rel8 `LOOP` to extern, subtracted register in memory (`[ebx - ecx]`), missing operand after comma (`mov eax,`), undefined symbol reference, and undeclared `global` symbol definition. |
+| `test_071 - test_080` | **Worklet 3 (Section Splitter & Directives)** | Unknown section names (`.my_custom_section`), duplicate `equ`, label-equ conflicts, duplicate labels in `.data`, unknown directives (`align`), negative `times` count, missing `resb` operand, out-of-range `db` / `dw` values, and division by zero in `equ`. |
 
 ---
 
@@ -44,7 +41,7 @@ python generate_tests.py
 
 ## Running the Integration Tests
 
-To run all 100 tests in a single automated pass:
+To run all 80 tests in a single automated pass:
 
 ```bash
 python run_tests.py

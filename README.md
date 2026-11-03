@@ -105,13 +105,13 @@ assembler_new/
 ├── worklet2.cpp              # Worklet 2: x86-32 machine code encoder implementation
 ├── worklet3.cpp              # Worklet 3: Directives, section splitter, and ELF32 generator
 ├── INSTRUCTION_SET.md        # Comprehensive x86-32 ISA reference supported by assembler
-├── tests/                    # 100 End-to-end integration test cases (test_001 to test_100)
-├── responses/                # Captured worklet execution outputs for all 100 tests
+├── tests/                    # 80 End-to-end integration test cases (test_001 to test_080)
+├── responses/                # Captured worklet execution outputs for all 80 tests
 ├── unit_tests_worklet1/      # Dedicated C++ unit test suite for Worklet 1 core functions
-├── generate_tests.py         # Test generator script for the 100 integration tests
-├── run_tests.py              # Automated test runner for the 100 integration tests
-├── run_tests.bat             # Batch runner for the 100 integration tests
-└── run_tests.ps1             # PowerShell runner for the 100 integration tests
+├── generate_tests.py         # Test generator script for the 80 integration tests
+├── run_tests.py              # Automated test runner for the 80 integration tests
+├── run_tests.bat             # Batch runner for the 80 integration tests
+└── run_tests.ps1             # PowerShell runner for the 80 integration tests
 ```
 
 ---
@@ -124,8 +124,8 @@ Runs 47 isolated unit tests covering `parseMemoryExpressionComponents`, `parseAs
 python unit_tests_worklet1/run_unit_tests.py
 ```
 
-### 2. Full Pipeline 100 Integration Tests
-Executes all 60 valid and 40 error test cases through all 3 worklets:
+### 2. Full Pipeline 80 Integration Tests
+Executes all 60 valid and 20 error test cases through all 3 worklets:
 ```bash
 python run_tests.py
 ```

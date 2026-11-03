@@ -2,68 +2,74 @@
 TEST CODE RUN RESPONSE: test_073.asm
 ================================================================================
 Test Number   : 073
-Test Title    : Test 073 [ERROR]: Value out of range for DB (-128..255)
+Test Title    : Test 073 [ERROR]: Directive error: EQU definition conflicts with existing label in data
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Error at line 5: value 500 out of range for db (-128..255))
+Overall Result: PASS (Expected Error Caught: Error at line 4: symbol 'func_entry' already defined as a label)
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 073 [ERROR]: Value out of range for DB (-128..255)
-; Stage: Worklet 3 (splitSource)
-; Expected Error: value 500 out of range for db (-128..255)
 section .data
-overflow_byte: db 500
+func_entry: db 1
 
-section .text
-_start:
-    nop
+func_entry equ 42
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 3 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_073.asm" (9 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-[STDERR]:
-Error at line 5: value 500 out of range for db (-128..255)
+Subsystem: Worklet 3 Directive Evaluation (splitSource)
+Failing Line: func_entry equ 42
+Root-Cause & Specification Explanation:
+The symbol 'func_entry' was already defined as a memory label in the .data section (db 1).
+Worklet 3 checks for name collisions between symbols and EQU constants, reporting:
+  "Error: symbol 'func_entry' already defined as a label"
+A symbol cannot be both a section-relative label and an absolute EQU constant.
 
 --------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_073.asm" (9 lines). Target: "temp_out\test_073.bin"
+[Main: main] Input: "tests\test_073.asm" (4 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
-Error at line 5: value 500 out of range for db (-128..255)
+Error at line 4: symbol 'func_entry' already defined as a label
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_073.asm" (9 lines). Target: "temp_out\test_073.o"
+[Main: main] Input: "tests\test_073.asm" (4 lines). Target: "temp_out\test_073.bin"
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
-Error at line 5: value 500 out of range for db (-128..255)
+Error at line 4: symbol 'func_entry' already defined as a label
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_073.asm" (4 lines). Target: "temp_out\test_073.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[STDERR]:
+Error at line 4: symbol 'func_entry' already defined as a label
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Error at line 5: value 500 out of range for db (-128..255)
+- Verification Note: Expected Error Caught: Error at line 4: symbol 'func_entry' already defined as a label
 ================================================================================

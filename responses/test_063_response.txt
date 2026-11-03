@@ -2,66 +2,99 @@
 TEST CODE RUN RESPONSE: test_063.asm
 ================================================================================
 Test Number   : 063
-Test Title    : Test 063 [ERROR]: EQU definition conflicts with existing label in data
+Test Title    : Test 063 [ERROR]: Lexical error: label name is a reserved register keyword
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Error at line 7: symbol 'func_entry' already defined as a label)
+Overall Result: PASS (Expected Error Caught: Lexical Error at line 2, column 1: label name 'eax' is a reserved word)
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 063 [ERROR]: EQU definition conflicts with existing label in data
-; Stage: Worklet 3 (splitSource)
-; Expected Error: symbol 'func_entry' already defined as a label
-section .data
-func_entry: db 1
-
-func_entry equ 42
+section .text
+eax:
+    nop
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 1 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_063.asm" (7 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-[STDERR]:
-Error at line 7: symbol 'func_entry' already defined as a label
+Subsystem: Worklet 1 Lexer (tokenizeSourceLine)
+Failing Line: eax:
+Root-Cause & Specification Explanation:
+When tokenizing a label definition (an identifier immediately followed by a colon ':'), Worklet 1
+verifies whether the symbol name collides with reserved keywords using isValidRegisterName() and
+isValidMnemonicName(). 'EAX' is an x86 hardware register. To prevent syntactic ambiguity between
+register operands and jump target identifiers, Worklet 1 reports:
+  "Lexical Error: label name 'eax' is a reserved word"
+Hardware registers and ISA mnemonics cannot be used as label names.
 
 --------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_063.asm" (7 lines). Target: "temp_out\test_063.bin"
+[Main: main] Input: "tests\test_063.asm" (3 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 0 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 1 dense label IDs (extId=0).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
 [STDERR]:
-Error at line 7: symbol 'func_entry' already defined as a label
+Lexical Error at line 2, column 1: label name 'eax' is a reserved word
+
+1 error(s) found. Pipeline stopped.
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_063.asm" (7 lines). Target: "temp_out\test_063.o"
+[Main: main] Input: "tests\test_063.asm" (3 lines). Target: "temp_out\test_063.bin"
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 0 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 1 dense label IDs (extId=0).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
 [STDERR]:
-Error at line 7: symbol 'func_entry' already defined as a label
+Lexical Error at line 2, column 1: label name 'eax' is a reserved word
+
+1 error(s) found. Pipeline stopped.
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_063.asm" (3 lines). Target: "temp_out\test_063.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 3 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 0 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 1 dense label IDs (extId=0).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Lexical Error at line 2, column 1: label name 'eax' is a reserved word
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Error at line 7: symbol 'func_entry' already defined as a label
+- Verification Note: Expected Error Caught: Lexical Error at line 2, column 1: label name 'eax' is a reserved word
 ================================================================================

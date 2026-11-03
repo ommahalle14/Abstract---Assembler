@@ -1,6 +1,6 @@
-; Test 076 [ERROR]: Lexical error: missing closing bracket ']' in memory operand
-; Stage: Worklet 1 (tokenizeSourceLine)
-; Expected Error: Lexical Error ... missing closing ']' for memory operand
+section .data
+times -5 db 1
+
 section .text
 _start:
-    mov eax, [ebx + 4
+    nop

@@ -2,68 +2,101 @@
 TEST CODE RUN RESPONSE: test_066.asm
 ================================================================================
 Test Number   : 066
-Test Title    : Test 066 [ERROR]: Unknown directive in data section
+Test Title    : Test 066 [ERROR]: Syntax error: rel8 branch (LOOP) cannot reference external symbol
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Syntax Error at line 5: unknown directive 'align')
+Overall Result: PASS (Expected Error Caught: Syntax Error at line 4, column 10: LOOP cannot reference an external symbol (rel8))
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 066 [ERROR]: Unknown directive in data section
-; Stage: Worklet 3 (splitSource)
-; Expected Error: unknown directive 'align'
-section .data
-align 4
-
+extern ext_func
 section .text
 _start:
-    nop
+    loop ext_func
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 1 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_066.asm" (9 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Syntax Error at line 5: unknown directive 'align'
-
---------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
---------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_066.asm" (9 lines). Target: "temp_out\test_066.bin"
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-[STDERR]:
-Syntax Error at line 5: unknown directive 'align'
+Subsystem: Worklet 1 Parser (parseAssemblySource)
+Failing Line: loop ext_func
+Root-Cause & Specification Explanation:
+The x86 'LOOP' instruction is strictly encoded with an 8-bit signed relative displacement (rel8),
+constraining the target address to within -128 to +127 bytes of the current instruction pointer.
+External symbols declared via 'extern' reside in external compilation units and require 32-bit
+relocations (R_386_PC32). Because a rel8 operand cannot accommodate an external link-time relocation,
+Worklet 1 enforces ISA relocation constraints and reports:
+  "Syntax Error: LOOP cannot reference an external symbol (rel8)"
+Short branch instructions (LOOP, LOOPE, LOOPNE, JECXZ) cannot target external symbols.
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_066.asm" (9 lines). Target: "temp_out\test_066.o"
+[Main: main] Input: "tests\test_066.asm" (4 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 1 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 4 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
 [STDERR]:
-Syntax Error at line 5: unknown directive 'align'
+Syntax Error at line 4, column 10: LOOP cannot reference an external symbol (rel8)
+
+1 error(s) found. Pipeline stopped.
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_066.asm" (4 lines). Target: "temp_out\test_066.bin"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 1 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 4 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 4, column 10: LOOP cannot reference an external symbol (rel8)
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_066.asm" (4 lines). Target: "temp_out\test_066.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 4 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 1 extern(s).
+
+>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+[Worklet 1: parseAssemblySource] Tokenizing and analyzing 4 assembly source lines...
+[Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
+[Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
+[Worklet 1: parseAssemblySource] Parsing complete: generated 1 IR instructions, recorded 0 symbol references (1 errors).
+[STDERR]:
+Syntax Error at line 4, column 10: LOOP cannot reference an external symbol (rel8)
+
+1 error(s) found. Pipeline stopped.
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Syntax Error at line 5: unknown directive 'align'
+- Verification Note: Expected Error Caught: Syntax Error at line 4, column 10: LOOP cannot reference an external symbol (rel8)
 ================================================================================

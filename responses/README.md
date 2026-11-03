@@ -7,12 +7,12 @@ This directory contains the detailed execution outputs and diagnostic logs gener
 ## Files in this Directory
 
 ### 1. `all_tests_summary.txt`
-The master execution summary across all 100 test cases:
-* **Summary Score**: 100/100 (100.0% Pass rate — 60/60 valid tests passed, 40/40 error tests correctly caught).
+The master execution summary across all 80 test cases:
+* **Summary Score**: 80/80 (100.0% Pass rate — 60/60 valid tests passed, 20/20 error tests correctly caught).
 * **Master Results Table**: Includes Test ID, filename, test type (`VALID` vs `ERROR`), pass/fail status, the handling pipeline stage / worklet, and specific notes or error messages.
-* **Full Worklet Outputs**: Comprehensive concatenated output for all 100 tests.
+* **Full Worklet Outputs**: Comprehensive concatenated output for all 80 tests.
 
-### 2. `test_XXX_response.txt` (test_001 to test_100)
+### 2. `test_XXX_response.txt` (test_001 to test_080)
 Individual per-test reports capturing every phase of execution:
 * **Header**: Test ID, descriptive title, category, and overall outcome.
 * **Source Code**: The exact assembly input being tested.

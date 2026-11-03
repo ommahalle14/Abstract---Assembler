@@ -2,68 +2,76 @@
 TEST CODE RUN RESPONSE: test_072.asm
 ================================================================================
 Test Number   : 072
-Test Title    : Test 072 [ERROR]: Empty operand in DB comma list
+Test Title    : Test 072 [ERROR]: Directive error: duplicate EQU definition
 Category      : ERROR TEST CASE
-Overall Result: PASS (Expected Error Caught: Syntax Error at line 5: empty operand in 'DB' directive)
+Overall Result: PASS (Expected Error Caught: Error at line 2: duplicate equ definition of 'BUFFER_SIZE')
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. SOURCE CODE
 --------------------------------------------------------------------------------
-; Test 072 [ERROR]: Empty operand in DB comma list
-; Stage: Worklet 3 (splitSource)
-; Expected Error: empty operand in 'DB' directive
-section .data
-bad_list: db 1, , 2
+BUFFER_SIZE equ 1024
+BUFFER_SIZE equ 2048
 
 section .text
 _start:
-    nop
+    mov eax, BUFFER_SIZE
 
 --------------------------------------------------------------------------------
-2. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
+2. WORKLET 3 ERROR ROOT-CAUSE ANALYSIS & EXPLANATION
 --------------------------------------------------------------------------------
-Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_072.asm" (9 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-[STDERR]:
-Syntax Error at line 5: empty operand in 'DB' directive
+Subsystem: Worklet 3 Directive Evaluation (splitSource)
+Failing Line: BUFFER_SIZE equ 2048
+Root-Cause & Specification Explanation:
+The constant 'BUFFER_SIZE' was already defined earlier in the source (equ 1024).
+Worklet 3 enforces immutability on EQU definitions, rejecting duplicate assignment with:
+  "Error: duplicate equ definition of 'BUFFER_SIZE'"
+EQU constants cannot be redefined within the same source file.
 
 --------------------------------------------------------------------------------
-3. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
+3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_072.asm" (9 lines). Target: "temp_out\test_072.bin"
+[Main: main] Input: "tests\test_072.asm" (6 lines). Target: ""
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
-Syntax Error at line 5: empty operand in 'DB' directive
+Error at line 2: duplicate equ definition of 'BUFFER_SIZE'
 
 --------------------------------------------------------------------------------
-4. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+4. WORKLET 2 OUTPUT (Mode: --w2 [Encode to Machine Code & Disassembly Listing])
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_072.asm" (9 lines). Target: "temp_out\test_072.o"
+[Main: main] Input: "tests\test_072.asm" (6 lines). Target: "temp_out\test_072.bin"
 
 >>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
-Syntax Error at line 5: empty operand in 'DB' directive
+Error at line 2: duplicate equ definition of 'BUFFER_SIZE'
 
 --------------------------------------------------------------------------------
-5. WORKLET WORKFLOW SUMMARY
+5. WORKLET 3 & FULL PIPELINE OUTPUT (Mode: -o --bin --listing --dump-elf)
+--------------------------------------------------------------------------------
+Return Code: 1
+[STDOUT]:
+[Main: main] Input: "tests\test_072.asm" (6 lines). Target: "temp_out\test_072.o"
+
+>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
+[Worklet 3: splitSource] Processing 6 source lines...
+[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
+[STDERR]:
+Error at line 2: duplicate equ definition of 'BUFFER_SIZE'
+
+--------------------------------------------------------------------------------
+6. WORKLET WORKFLOW SUMMARY
 --------------------------------------------------------------------------------
 - Worklet 1 Status: ERROR / STOPPED
 - Worklet 2 Status: ERROR / SKIPPED
 - Worklet 3 Status: ERROR / DETECTED
-- Verification Note: Expected Error Caught: Syntax Error at line 5: empty operand in 'DB' directive
+- Verification Note: Expected Error Caught: Error at line 2: duplicate equ definition of 'BUFFER_SIZE'
 ================================================================================
