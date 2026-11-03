@@ -3,3 +3,7 @@
 *.o
 *.bin
 temp_out/
+
+# Generated PDF reports (kept local)
+*.pdf
+
