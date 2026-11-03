@@ -30,12 +30,6 @@ A symbol cannot be both a section-relative label and an absolute EQU constant.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_073.asm" (4 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 4 source lines...
-[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Error at line 4: symbol 'func_entry' already defined as a label
 

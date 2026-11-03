@@ -32,12 +32,6 @@ Unsupported alignment directives halt the splitter before phase 2.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_075.asm" (6 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 6 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Syntax Error at line 2: unknown directive 'align'
 

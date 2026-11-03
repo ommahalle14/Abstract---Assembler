@@ -1,8 +1,8 @@
 ================================================================================
                X86-32 MODULAR ASSEMBLER - 80 TEST SUITE SUMMARY                
 ================================================================================
-Execution Date & Time : 2026-11-03 23:50:38
-Execution Duration    : 7.40 seconds
+Execution Date & Time : 2026-11-04 01:32:05
+Execution Duration    : 8.09 seconds
 Total Tests Executed  : 80
 Valid Tests (001-060) : 60/60 Passed
 Error Tests (061-080) : 20/20 Correctly Caught
@@ -140,13 +140,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_001.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 16 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 15 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -379,13 +373,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_002.asm" (26 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 26 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 26 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -607,13 +595,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_003.asm" (21 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 21 source lines...
-[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -830,13 +812,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_004.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -1047,13 +1023,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_005.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -1264,13 +1234,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_006.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -1485,13 +1449,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_007.asm" (23 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 23 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 23 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 14 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -1737,13 +1695,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_008.asm" (42 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 42 source lines...
-[Worklet 3: splitSource] Split complete: 34 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 42 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 33 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -2022,13 +1974,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_009.asm" (18 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 18 source lines...
-[Worklet 3: splitSource] Split complete: 12 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 18 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 11 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -2239,13 +2185,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_010.asm" (16 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 16 source lines...
-[Worklet 3: splitSource] Split complete: 10 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 16 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 9 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -2453,13 +2393,7 @@ my_target:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_011.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 9 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -2677,13 +2611,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_012.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 12 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 11 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -2892,13 +2820,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_013.asm" (14 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 14 source lines...
-[Worklet 3: splitSource] Split complete: 8 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 14 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 7 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -3107,13 +3029,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_014.asm" (26 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 26 source lines...
-[Worklet 3: splitSource] Split complete: 18 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 26 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 17 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -3348,13 +3264,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_015.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -3577,13 +3487,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_016.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -3805,13 +3709,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_017.asm" (21 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 21 source lines...
-[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -4031,13 +3929,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_018.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -4260,13 +4152,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_019.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -4489,13 +4375,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_020.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -4719,13 +4599,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_021.asm" (23 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 23 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 23 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 14 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -4952,13 +4826,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_022.asm" (23 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 23 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 23 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 14 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -5203,13 +5071,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_023.asm" (41 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 41 source lines...
-[Worklet 3: splitSource] Split complete: 30 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 41 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 29 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -5482,13 +5344,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_024.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -5713,13 +5569,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_025.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 16 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 15 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -5947,13 +5797,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_026.asm" (21 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 21 source lines...
-[Worklet 3: splitSource] Split complete: 13 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -6178,13 +6022,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_027.asm" (27 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 27 source lines...
-[Worklet 3: splitSource] Split complete: 17 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 27 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 16 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -6419,13 +6257,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_028.asm" (25 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 25 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 25 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 14 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -6653,13 +6485,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_029.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -6884,13 +6710,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_030.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -7115,13 +6935,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_031.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 16 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 15 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -7352,13 +7166,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_032.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 16 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 15 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -7580,13 +7388,7 @@ forward_target:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_033.asm" (15 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 15 source lines...
-[Worklet 3: splitSource] Split complete: 7 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 15 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 3 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
@@ -7776,13 +7578,7 @@ helper_func:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_034.asm" (12 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 12 source lines...
-[Worklet 3: splitSource] Split complete: 8 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 12 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 6 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -7982,13 +7778,7 @@ target_not_zero:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_035.asm" (17 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 17 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 17 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 3 label definitions across 8 instructions.
 [Worklet 1: parseAssemblySource] Assigned 4 dense label IDs (extId=3).
@@ -8200,13 +7990,7 @@ lbl_g:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_036.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 5 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -8428,13 +8212,7 @@ lbl_a:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_037.asm" (24 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 24 source lines...
-[Worklet 3: splitSource] Split complete: 17 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 24 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 5 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -8663,13 +8441,7 @@ lbl_noparity:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_038.asm" (25 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 25 source lines...
-[Worklet 3: splitSource] Split complete: 19 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 25 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 7 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -8896,13 +8668,7 @@ loop_ne_start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_039.asm" (21 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 21 source lines...
-[Worklet 3: splitSource] Split complete: 16 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 21 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 4 label definitions across 12 instructions.
 [Worklet 1: parseAssemblySource] Assigned 5 dense label IDs (extId=4).
@@ -9115,13 +8881,7 @@ ecx_is_zero:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_040.asm" (10 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 10 source lines...
-[Worklet 3: splitSource] Split complete: 7 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 10 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -9330,13 +9090,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_041.asm" (29 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 29 source lines...
-[Worklet 3: splitSource] Split complete: 20 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 29 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 19 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -9574,13 +9328,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_042.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 11 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -9787,13 +9535,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_043.asm" (15 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 15 source lines...
-[Worklet 3: splitSource] Split complete: 12 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 15 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 11 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -9997,13 +9739,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_044.asm" (9 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 9 source lines...
-[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 9 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -10195,13 +9931,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_045.asm" (15 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 15 source lines...
-[Worklet 3: splitSource] Split complete: 7 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 15 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 6 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -10394,13 +10124,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_046.asm" (13 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 13 source lines...
-[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 13 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -10592,13 +10316,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_047.asm" (15 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 15 source lines...
-[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 15 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -10788,13 +10506,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_048.asm" (13 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 13 source lines...
-[Worklet 3: splitSource] Split complete: 5 .text instruction lines, 7 .data bytes, 0 .bss reserved bytes, 3 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 13 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -10975,13 +10687,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_049.asm" (13 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 13 source lines...
-[Worklet 3: splitSource] Split complete: 5 .text instruction lines, 0 .data bytes, 112 .bss reserved bytes, 3 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 13 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -11161,13 +10867,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_050.asm" (12 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 12 source lines...
-[Worklet 3: splitSource] Split complete: 5 .text instruction lines, 41 .data bytes, 0 .bss reserved bytes, 2 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 12 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -11347,13 +11047,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_051.asm" (12 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 12 source lines...
-[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 42 .data bytes, 0 .bss reserved bytes, 3 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 12 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 3 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -11530,13 +11224,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_052.asm" (11 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 11 source lines...
-[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 0 .data bytes, 256 .bss reserved bytes, 2 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 11 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 3 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -11718,13 +11406,7 @@ my_exported_function:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_053.asm" (16 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 16 source lines...
-[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 4 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 16 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -11903,13 +11585,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_054.asm" (10 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 10 source lines...
-[Worklet 3: splitSource] Split complete: 4 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 2 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 10 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 3 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -12091,13 +11767,7 @@ my_func:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_055.asm" (17 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 17 source lines...
-[Worklet 3: splitSource] Split complete: 7 .text instruction lines, 16 .data bytes, 0 .bss reserved bytes, 4 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 17 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -12282,13 +11952,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_056.asm" (13 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 13 source lines...
-[Worklet 3: splitSource] Split complete: 6 .text instruction lines, 16 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 13 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 5 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -12469,13 +12133,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_057.asm" (11 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 11 source lines...
-[Worklet 3: splitSource] Split complete: 5 .text instruction lines, 32 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 11 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 4 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -12662,13 +12320,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_058.asm" (19 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 19 source lines...
-[Worklet 3: splitSource] Split complete: 14 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 19 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 13 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -12891,13 +12543,7 @@ done:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_059.asm" (22 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 22 source lines...
-[Worklet 3: splitSource] Split complete: 15 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 22 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 5 label definitions across 10 instructions.
 [Worklet 1: parseAssemblySource] Assigned 6 dense label IDs (extId=5).
@@ -13133,13 +12779,7 @@ copy_loop:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_060.asm" (38 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 38 source lines...
-[Worklet 3: splitSource] Split complete: 19 .text instruction lines, 15 .data bytes, 32 .bss reserved bytes, 2 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 38 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 2 label definitions across 17 instructions.
 [Worklet 1: parseAssemblySource] Assigned 3 dense label IDs (extId=2).
@@ -13351,13 +12991,7 @@ AST construction, and stops the pipeline before passing instructions to Worklet 
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_061.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 0 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -13455,13 +13089,7 @@ Malformed literals are rejected at the token level, preventing invalid constants
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_062.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 0 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -13559,13 +13187,7 @@ Hardware registers and ISA mnemonics cannot be used as label names.
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_063.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 0 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 1 dense label IDs (extId=0).
@@ -13662,13 +13284,7 @@ The parser terminates front-end IR generation without creating a w2::Instruction
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_064.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -13766,13 +13382,7 @@ Discovering bits == 16 for 'BX', Worklet 1 reports:
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_065.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -13872,13 +13482,7 @@ Short branch instructions (LOOP, LOOPE, LOOPNE, JECXZ) cannot target external sy
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_066.asm" (4 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 4 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 1 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 4 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -13976,13 +13580,7 @@ Negative arithmetic is only permitted on numeric displacements, not on register 
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_067.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -14079,13 +13677,7 @@ Instructions cannot end abruptly with a dangling comma.
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_068.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -14182,13 +13774,7 @@ Unresolved symbols are caught at the front-end parser stage, preventing broken b
 --------------------------------------------------------------------------------
 Return Code: 1
 [STDOUT]:
-[Main: main] Input: "tests\test_069.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 3 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -14288,13 +13874,7 @@ Every exported global symbol must have a concrete address in .text, .data, or .b
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_070.asm" (5 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 5 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 5 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 1 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).
@@ -14424,12 +14004,6 @@ Non-standard sections are rejected during initial source splitting.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_071.asm" (3 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 3 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Syntax Error at line 1, column 1: unknown section '.MY_CUSTOM_SECTION'
 
@@ -14505,12 +14079,6 @@ EQU constants cannot be redefined within the same source file.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_072.asm" (6 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 6 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Error at line 2: duplicate equ definition of 'BUFFER_SIZE'
 
@@ -14584,12 +14152,6 @@ A symbol cannot be both a section-relative label and an absolute EQU constant.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_073.asm" (4 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 4 source lines...
-[Worklet 3: splitSource] Split complete: 0 .text instruction lines, 1 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Error at line 4: symbol 'func_entry' already defined as a label
 
@@ -14666,12 +14228,6 @@ Labels within the same section must be unique.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_074.asm" (7 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 2 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Error at line 3: duplicate label 'my_data_var'
 
@@ -14747,12 +14303,6 @@ Unsupported alignment directives halt the splitter before phase 2.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_075.asm" (6 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 6 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Syntax Error at line 2: unknown directive 'align'
 
@@ -14828,12 +14378,6 @@ Repetition counts must be >= 0.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_076.asm" (6 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 6 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Error at line 2: negative repeat count -5
 
@@ -14910,12 +14454,6 @@ Storage reservation directives cannot omit the size count.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_077.asm" (7 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Syntax Error at line 3: 'RESB' directive requires count operand
 
@@ -14992,12 +14530,6 @@ Values exceeding 8 bits must use DW or DD.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_078.asm" (7 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Error at line 3: value 500 out of range for db (-128..255)
 
@@ -15074,12 +14606,6 @@ Values exceeding 16 bits must use DD.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_079.asm" (7 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 7 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 1 label(s), 0 extern(s).
 [STDERR]:
 Error at line 3: value 100000 out of range for dw (-32768..65535)
 
@@ -15154,12 +14680,6 @@ Division by zero is an invalid mathematical operation.
 3. WORKLET 1 OUTPUT (Mode: --w1 [Tokenize, Parse directly into IR, Display IR])
 --------------------------------------------------------------------------------
 Return Code: 1
-[STDOUT]:
-[Main: main] Input: "tests\test_080.asm" (5 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 5 source lines...
-[Worklet 3: splitSource] Split complete: 2 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
 [STDERR]:
 Error at line 1: Division by zero at line 1, column 5
 

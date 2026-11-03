@@ -31,13 +31,7 @@ _start:
 --------------------------------------------------------------------------------
 Return Code: 0
 [STDOUT]:
-[Main: main] Input: "tests\test_045.asm" (15 lines). Target: ""
-
->>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<
-[Worklet 3: splitSource] Processing 15 source lines...
-[Worklet 3: splitSource] Split complete: 7 .text instruction lines, 0 .data bytes, 0 .bss reserved bytes, 0 label(s), 0 extern(s).
-
->>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
+>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<
 [Worklet 1: parseAssemblySource] Tokenizing and analyzing 15 assembly source lines...
 [Worklet 1: parseAssemblySource] Discovered 1 label definitions across 6 instructions.
 [Worklet 1: parseAssemblySource] Assigned 2 dense label IDs (extId=1).

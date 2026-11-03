@@ -198,9 +198,11 @@ void substituteEqu(std::vector<std::string>& lines, const std::unordered_map<std
 
 // The whole pipeline
 int assemble(const std::vector<std::string>& rawLines, const Options& opt) {
-    std::cout << "\n>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<\n";
+    if (!opt.w1Only) {
+        std::cout << "\n>>> Phase 1: Source Splitting (Worklet 3: splitSource) <<<\n";
+    }
     // ---- Worklet 3, front half: sections + directives --------------------------------------
-    w3::SourceSplitResult split = w3::splitSource(rawLines);
+    w3::SourceSplitResult split = w3::splitSource(rawLines, !opt.w1Only);
     if (!split.ok) {
         for (size_t i = 0; i < split.errors.size(); ++i) std::cerr << split.errors[i] << "\n";
         return 1;
@@ -212,7 +214,11 @@ int assemble(const std::vector<std::string>& rawLines, const Options& opt) {
         externalNames.push_back(kv->first);
     substituteEqu(split.textLines, split.symbols.equConstants);
 
-    std::cout << "\n>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<\n";
+    if (!opt.w1Only) {
+        std::cout << "\n>>> Phase 2: Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<\n";
+    } else {
+        std::cout << "\n>>> Assembly Parsing & IR Generation (Worklet 1: parseAssemblySource) <<<\n";
+    }
     // ---- Worklet 1: tokenize and parse directly to enum instructions ------------------------
     std::set<std::string> externSet(externalNames.begin(), externalNames.end());
     Worklet1Output w1 = parseAssemblySource(split.textLines, &externSet);
@@ -350,6 +356,8 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::string> rawLines;
     if (!readSourceFile(input, rawLines)) { std::cerr << "Error: could not open '" << input << "'\n"; return 1; }
-    std::cout << "[Main: main] Input: \"" << input << "\" (" << rawLines.size() << " lines). Target: \"" << opt.out << "\"\n";
+    if (!opt.w1Only) {
+        std::cout << "[Main: main] Input: \"" << input << "\" (" << rawLines.size() << " lines). Target: \"" << opt.out << "\"\n";
+    }
     return assemble(rawLines, opt);
 }

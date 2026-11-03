@@ -668,7 +668,7 @@ struct SourceSplitResult {
 
 // Splits input source lines into sections and processes all directives:
 // section .text|.data|.bss, global, extern, equ, db, dw, dd, resb, resw, resd, times N db X.
-SourceSplitResult splitSource(const std::vector<std::string>& lines);
+SourceSplitResult splitSource(const std::vector<std::string>& lines, bool verbose = true);
 
 
 // OWNER: Member 1 - Source Splitter & Directives Parser
@@ -862,8 +862,10 @@ bool parseUnsigned64OrExpr(const std::string& s, const ExprContext& ctx, int lin
 
 } // namespace
 
-SourceSplitResult splitSource(const std::vector<std::string>& lines) {
-    std::cout << "[Worklet 3: splitSource] Processing " << lines.size() << " source lines...\n";
+SourceSplitResult splitSource(const std::vector<std::string>& lines, bool verbose) {
+    if (verbose) {
+        std::cout << "[Worklet 3: splitSource] Processing " << lines.size() << " source lines...\n";
+    }
     SourceSplitResult res;
     res.ok = true;
     res.textLines.resize(lines.size()); // keep line numbers exact (1-based index matching)
@@ -1245,11 +1247,13 @@ SourceSplitResult splitSource(const std::vector<std::string>& lines) {
     for (const auto& tl : res.textLines) {
         if (!tl.empty()) textLineCount++;
     }
-    std::cout << "[Worklet 3: splitSource] Split complete: " << textLineCount
-              << " .text instruction lines, " << res.sections.dataBytes.size()
-              << " .data bytes, " << res.sections.bssSize
-              << " .bss reserved bytes, " << res.symbols.labels.size()
-              << " label(s), " << res.symbols.externs.size() << " extern(s).\n";
+    if (verbose) {
+        std::cout << "[Worklet 3: splitSource] Split complete: " << textLineCount
+                  << " .text instruction lines, " << res.sections.dataBytes.size()
+                  << " .data bytes, " << res.sections.bssSize
+                  << " .bss reserved bytes, " << res.symbols.labels.size()
+                  << " label(s), " << res.symbols.externs.size() << " extern(s).\n";
+    }
 
     return res;
 }
