@@ -24,7 +24,7 @@ import shutil
 TESTS_DIR = "tests"
 RESPONSES_DIR = "responses"
 TEMP_DIR = "temp_out"
-ASSEMBLER_EXE = ".\\assembler.exe"
+ASSEMBLER_EXE = ".\\assembler.exe" if os.name == "nt" else "./assembler.exe"
 
 TEST_TITLES = {
     61: "Test 061 [ERROR]: Lexical error: missing closing bracket ']' in memory operand",

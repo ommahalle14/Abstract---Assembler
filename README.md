@@ -107,7 +107,7 @@ assembler_new/
 ├── INSTRUCTION_SET.md        # Comprehensive x86-32 ISA reference supported by assembler
 ├── tests/                    # 80 End-to-end integration test cases (test_001 to test_080)
 ├── responses/                # Captured worklet execution outputs for all 80 tests
-├── unit_tests_worklet1/      # Dedicated C++ unit test suite for Worklet 1 core functions
+├── unit_testing/             # Dedicated C++ unit test suite for Worklet 1 major functions
 ├── generate_tests.py         # Test generator script for the 80 integration tests
 ├── run_tests.py              # Automated test runner for the 80 integration tests
 ├── run_tests.bat             # Batch runner for the 80 integration tests
@@ -119,9 +119,9 @@ assembler_new/
 ## Running the Tests
 
 ### 1. Worklet 1 Dedicated Unit Tests (In-Memory C++ Tests)
-Runs 47 isolated unit tests covering `parseMemoryExpressionComponents`, `parseAssemblySource`, and `buildSymbolTable`:
+Runs isolated unit tests covering `parseMemoryExpressionComponents`, `parseAssemblySource`, and `buildSymbolTable`:
 ```bash
-python unit_tests_worklet1/run_unit_tests.py
+python unit_testing/run_unit_tests.py
 ```
 
 ### 2. Full Pipeline 80 Integration Tests
